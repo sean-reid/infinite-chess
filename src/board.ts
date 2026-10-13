@@ -1,7 +1,8 @@
 import { isWhite, kindOf, type Code } from "../engine/pieces.ts";
+import { glyph } from "./glyphs.ts";
 import type { Position } from "../engine/position.ts";
 import type { Ray } from "../engine/moves.ts";
-import { sameSquare, type Square } from "../engine/square.ts";
+import type { Square } from "../engine/square.ts";
 
 export interface View {
   // Board coordinates at the centre of the canvas and pixels per square.
@@ -91,6 +92,17 @@ export class Board {
     };
   }
 
+  inView(s: Square): boolean {
+    const v = this.visible();
+    return s.x > v.x0 + 1 && s.x < v.x1 - 1 && s.y > v.y0 + 1 && s.y < v.y1 - 1;
+  }
+
+  centreOn(s: Square): void {
+    this.view.cx = s.x;
+    this.view.cy = s.y;
+    if (this.view.scale < 12) this.view.scale = 16;
+  }
+
   visible(): { x0: number; x1: number; y0: number; y1: number } {
     const a = this.squareAt(0, this.height);
     const b = this.squareAt(this.width, 0);
@@ -165,14 +177,14 @@ export class Board {
     ctx.strokeRect(px + width / 2, py + width / 2, scale - width, scale - width);
   }
 
-  // Pieces are letters: black filled, white outlined. Below readable size they
-  // become marks of the same weight.
+  // Pieces are flat silhouettes: white filled paper with an ink outline,
+  // black filled ink. Below readable size they become marks of the same weight.
   private piece(s: Square, code: Code): void {
     const { ctx, palette } = this;
     const { scale } = this.view;
     const [px, py] = this.origin(s);
     const white = isWhite(code);
-    if (scale < 9) {
+    if (scale < 8) {
       const r = Math.max(1, scale * 0.3);
       ctx.beginPath();
       ctx.arc(px + scale / 2, py + scale / 2, r, 0, Math.PI * 2);
@@ -188,23 +200,25 @@ export class Board {
       }
       return;
     }
-    const letter = kindOf(code);
-    ctx.font = `500 ${Math.round(scale * 0.66)}px ${palette.mono}`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    const x = px + scale / 2;
-    const y = py + scale / 2 + scale * 0.04;
+    const path = glyph(kindOf(code));
+    ctx.save();
+    ctx.translate(px + scale * 0.04, py + scale * 0.04);
+    ctx.scale(scale * 0.0092, scale * 0.0092);
+    ctx.lineJoin = "round";
     if (white) {
-      ctx.lineJoin = "round";
-      ctx.lineWidth = Math.max(1, scale / 14);
-      ctx.strokeStyle = palette.ink;
-      ctx.strokeText(letter, x, y);
       ctx.fillStyle = palette.paper;
-      ctx.fillText(letter, x, y);
+      ctx.strokeStyle = palette.ink;
+      ctx.lineWidth = scale >= 24 ? 5 : 7;
+      ctx.fill(path);
+      ctx.stroke(path);
     } else {
       ctx.fillStyle = palette.ink;
-      ctx.fillText(letter, x, y);
+      ctx.strokeStyle = palette.paper;
+      ctx.lineWidth = 2.5;
+      ctx.fill(path);
+      ctx.stroke(path);
     }
+    ctx.restore();
   }
 
   // File numbers along the bottom, rank numbers up the left, thinned out as
@@ -243,5 +257,3 @@ export class Board {
     ctx.stroke();
   }
 }
-
-export const isSameSquare = sameSquare;
