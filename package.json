@@ -1,0 +1,33 @@
+{
+  "name": "infinite-chess",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Play black in the infinite chess position with game value omega to the fourth.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "dev:web": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit && tsc -p worker/tsconfig.json",
+    "lint": "eslint src engine worker scripts tests vite.config.ts playwright.config.ts eslint.config.js prettier.config.js --max-warnings 0",
+    "format": "prettier --write src engine worker scripts tests index.html vite.config.ts playwright.config.ts eslint.config.js prettier.config.js package.json tsconfig.json wrangler.jsonc release-please-config.json .github",
+    "format:check": "prettier --check src engine worker scripts tests index.html vite.config.ts playwright.config.ts eslint.config.js prettier.config.js package.json tsconfig.json wrangler.jsonc release-please-config.json .github",
+    "test": "vitest run",
+    "size": "node scripts/size.mjs",
+    "test:e2e": "playwright test",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261013.1",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.5",
+    "eslint": "^10.12.0",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4",
+    "wrangler": "^4.150.0"
+  }
+}
