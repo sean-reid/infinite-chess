@@ -3,7 +3,7 @@ import { Game } from "./game.ts";
 import { attachInput } from "./input.ts";
 import { renderHint, renderMoves, renderPrompt, renderStatus, renderValue } from "./panel.ts";
 import { NARROW_BELOW, NARROW_VIEW, WIDE_VIEW } from "./views.ts";
-import { hashMoves, loadGame, saveGame, setHash } from "./store.ts";
+import { THEME_KEY, hashMoves, loadGame, persist, writeText } from "./store.ts";
 import { renderStats } from "./panel.ts";
 import { KEY_BISHOP, BLACK_KING } from "../engine/geometry.ts";
 import { inCheck } from "../engine/moves.ts";
@@ -44,9 +44,7 @@ function layout(): void {
 }
 
 game.onChange((st) => {
-  const moves = st.pos.history.map((p) => ({ from: p.from, to: p.to }));
-  setHash(moves);
-  saveGame(moves);
+  void persist(st.pos.history.map((p) => ({ from: p.from, to: p.to })));
   renderStats(statsEl, st);
   renderMoves(movelist, st);
   renderStatus(status, st);
@@ -73,7 +71,7 @@ layout();
 window.addEventListener("resize", layout);
 renderStatus(status, game.state);
 renderStats(statsEl, game.state);
-game.load(hashMoves() ?? loadGame());
+void (async () => game.load((await hashMoves()) ?? (await loadGame())))();
 
 const share = document.getElementById("share") as HTMLButtonElement;
 share.addEventListener("click", async () => {
@@ -133,11 +131,7 @@ const labelTheme = () => {
 labelTheme();
 theme.addEventListener("click", () => {
   document.documentElement.dataset.theme = isDark() ? "light" : "dark";
-  try {
-    localStorage.setItem("infinite-chess:theme", document.documentElement.dataset.theme);
-  } catch {
-    // storage is optional
-  }
+  writeText(THEME_KEY, document.documentElement.dataset.theme);
   labelTheme();
   board.refreshPalette();
   paint();
