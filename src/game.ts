@@ -3,6 +3,7 @@ import { Position, type Move, type Played } from "../engine/position.ts";
 import { sameSquare, type Square } from "../engine/square.ts";
 import type { Hint } from "../engine/mainline.ts";
 import type { GameValue } from "../engine/ordinal.ts";
+import { loadStats, saveStats, type Stats } from "./store.ts";
 import type { Focus, WhiteReply, WhiteRequest } from "./worker.ts";
 
 export type Phase = "black" | "white" | "over";
@@ -17,6 +18,7 @@ export interface GameState {
   value: GameValue | null;
   focus: Focus;
   hint: Hint | null;
+  stats: Stats;
 }
 
 export type Listener = (state: GameState) => void;
@@ -40,6 +42,7 @@ export class Game {
       value: null,
       focus: { tower: null, cannon: null, wing: null },
       hint: null,
+      stats: loadStats(),
     };
     this.worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
     this.worker.onmessage = (e: MessageEvent<WhiteReply>) => this.onReply(e.data);
@@ -63,6 +66,45 @@ export class Game {
 
   onChange(l: Listener): void {
     this.listeners.push(l);
+  }
+
+  // Replays a saved or shared game. Returns how many moves were taken.
+  load(moves: Move[]): number {
+    const st = this.state;
+    let n = 0;
+    for (const m of moves) {
+      if (!isLegal(st.pos, m)) break;
+      st.pos.play(m);
+      n++;
+    }
+    if (outcome(st.pos) === "checkmate") {
+      st.phase = "over";
+      st.result = "checkmate";
+    } else if (st.pos.turn === "w") {
+      this.afterMove();
+      return n;
+    }
+    this.emit();
+    this.askValue();
+    return n;
+  }
+
+  private record(finished: boolean): void {
+    const st = this.state;
+    const plies = st.pos.history.length;
+    const farthest = Math.max(
+      ...st.pos.history
+        .filter((p) => p.piece === "b" && p.from.x === 46 && p.from.y === 45)
+        .map((p) => p.to.x - 46),
+      0,
+    );
+    st.stats = {
+      games: st.stats.games + (finished ? 0 : 1),
+      finished: st.stats.finished + (finished ? 1 : 0),
+      longest: Math.max(st.stats.longest, Math.ceil(plies / 2)),
+      farthest: Math.max(st.stats.farthest, farthest),
+    };
+    saveStats(st.stats);
   }
 
   private emit(): void {
@@ -118,6 +160,7 @@ export class Game {
     if (o === "checkmate") {
       st.phase = "over";
       st.result = "checkmate";
+      this.record(true);
       this.emit();
       return;
     }
@@ -190,11 +233,13 @@ export class Game {
     this.requestId++;
     st.phase = "over";
     st.result = "resigned";
+    this.record(true);
     this.emit();
   }
 
   restart(): void {
     const st = this.state;
+    if (st.pos.history.length && st.result === null) this.record(false);
     this.requestId++;
     while (st.pos.history.length) st.pos.undo();
     st.phase = "black";

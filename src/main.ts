@@ -3,6 +3,8 @@ import { Game } from "./game.ts";
 import { attachInput } from "./input.ts";
 import { renderHint, renderMoves, renderPrompt, renderStatus, renderValue } from "./panel.ts";
 import { NARROW_BELOW, NARROW_VIEW, WIDE_VIEW } from "./views.ts";
+import { hashMoves, loadGame, saveGame, setHash } from "./store.ts";
+import { renderStats } from "./panel.ts";
 import { KEY_BISHOP, BLACK_KING } from "../engine/geometry.ts";
 import { inCheck } from "../engine/moves.ts";
 
@@ -17,6 +19,7 @@ const prompt = document.getElementById("prompt") as HTMLElement;
 const ordinal = document.getElementById("ordinal") as HTMLElement;
 const terms = document.getElementById("terms") as HTMLElement;
 const hintText = document.getElementById("hint-text") as HTMLElement;
+const statsEl = document.getElementById("stats") as HTMLElement;
 
 function paint(): void {
   const st = game.state;
@@ -37,6 +40,10 @@ function layout(): void {
 }
 
 game.onChange((st) => {
+  const moves = st.pos.history.map((p) => ({ from: p.from, to: p.to }));
+  setHash(moves);
+  saveGame(moves);
+  renderStats(statsEl, st);
   renderMoves(movelist, st);
   renderStatus(status, st);
   renderValue(ordinal, terms, st);
@@ -57,6 +64,23 @@ attachInput(board, {
 layout();
 window.addEventListener("resize", layout);
 renderStatus(status, game.state);
+renderStats(statsEl, game.state);
+game.load(hashMoves() ?? loadGame());
+
+const share = document.getElementById("share") as HTMLButtonElement;
+share.addEventListener("click", async () => {
+  const url = location.href;
+  try {
+    if (navigator.share) await navigator.share({ title: document.title, url });
+    else await navigator.clipboard.writeText(url);
+    share.textContent = "Link copied";
+  } catch {
+    share.textContent = "Copy failed";
+  }
+  setTimeout(() => {
+    share.textContent = "Share";
+  }, 1500);
+});
 
 const jumps: Record<string, { x: number; y: number }> = {
   throne: { x: 32, y: 61 },

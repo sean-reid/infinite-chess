@@ -100,3 +100,19 @@ test("the game value and the hint follow the position", async ({ page }, info) =
   await expect(page.locator("#hint-text")).toContainText("cannon");
   await page.screenshot({ path: info.outputPath("value-and-hint.png") });
 });
+
+test("a game survives a reload and a link restores it", async ({ page, context }) => {
+  await page.goto("/");
+  await tapSquare(page, 46, 45);
+  await tapSquare(page, 48, 47);
+  await expect(page.locator("#movelist li").first()).toContainText("×", { timeout: 15_000 });
+  await expect(page).toHaveURL(/#g=46\.45-48\.47;49\.46-48\.47$/);
+  await page.reload();
+  await expect(page.locator("#movelist li")).toHaveCount(1);
+  await expect(page.locator("#status")).toHaveText(/move 2 · black to play/);
+  const fresh = await context.newPage();
+  await fresh.goto("/#g=46.45-57.56;58.55-57.56");
+  await expect(fresh.locator("#movelist li").first()).toContainText("P (58,55)×(57,56)");
+  await fresh.getByRole("button", { name: "Resign" }).click();
+  await expect(fresh.locator("#stats")).toContainText("1 finished");
+});

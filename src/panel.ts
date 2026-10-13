@@ -30,6 +30,20 @@ export function renderValue(ordinal: HTMLElement, terms: HTMLElement, state: Gam
   show("g", v.g);
 }
 
+export function renderStats(el: HTMLElement, state: GameState): void {
+  const s = state.stats;
+  if (!s.games && !s.finished) {
+    el.hidden = true;
+    return;
+  }
+  el.hidden = false;
+  const games = s.games + s.finished;
+  const parts = [`${games} game${games === 1 ? "" : "s"}`, `${s.finished} finished`];
+  if (s.longest) parts.push(`longest ${s.longest} moves`);
+  if (s.farthest) parts.push(`bishop sent ${s.farthest} squares out`);
+  el.textContent = parts.join(" \u00b7 ");
+}
+
 export function renderHint(el: HTMLElement, state: GameState): void {
   if (!state.hint) {
     el.hidden = true;
