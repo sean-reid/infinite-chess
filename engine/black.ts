@@ -8,7 +8,7 @@ import { sameSquare, type Square } from "./square.ts";
 // A black that follows the paper's main line with small announcements: the
 // key bishop out `t` squares, every attacked rook up `height`, then cannons
 // in order up to `cannons`, after which it shuffles a spare bishop. Used to
-// test white; the real black is the player.
+// drive white in tests; in play black is the player.
 export interface BlackPlan {
   t: number;
   height: number;

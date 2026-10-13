@@ -149,10 +149,7 @@ export class Board {
       const n = Math.min(r.length, 4000);
       for (let i = 1; i <= n; i++) {
         const s = { x: from.x + r.dir.dx * i, y: from.y + r.dir.dy * i };
-        if (s.x < v.x0 || s.x > v.x1 || s.y < v.y0 || s.y > v.y1) {
-          if (r.length === Infinity && i > 4000) break;
-          continue;
-        }
+        if (s.x < v.x0 || s.x > v.x1 || s.y < v.y0 || s.y > v.y1) continue;
         dots.push(s);
       }
       if (r.capture) captures.push(r.capture);

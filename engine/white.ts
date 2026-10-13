@@ -345,7 +345,7 @@ export function towerMove(pos: Position, tw: Towers): Choice | null {
   return null;
 }
 
-function looseWhite(pos: Position): Square[] {
+export function looseWhite(pos: Position): Square[] {
   const out: Square[] = [];
   for (const [s, c] of whiteOverlay(pos)) if (c === "B") out.push(s);
   for (const s of [MATING_BISHOP, ...BOX_BISHOPS]) {
