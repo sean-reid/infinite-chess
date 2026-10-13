@@ -33,7 +33,8 @@ function movesToNextRook(pos: Position): { h: number; tower: number } | null {
   if (tw.first === null) return null;
   const first = tw.first;
   const rooksLeft = () => {
-    for (let m = first; m >= 0; m--) if (sim.atSquare(towerSquare(m, 0, 0)) === "r") return true;
+    const tw = towers(sim);
+    for (let m = 0; m <= first; m++) if (!tw.taken.has(m)) return true;
     return false;
   };
   const bishopFree = () => {
@@ -55,9 +56,14 @@ function movesToNextRook(pos: Position): { h: number; tower: number } | null {
     }
   }
   for (let h = skipped; h <= H_CAP; h++) {
-    for (let m = first; m >= 0; m--) {
-      if (sim.atSquare(towerSquare(m, 0, 0)) === "r" && sim.atSquare(towerSquare(m, 1, -1)) === "P")
-        return { h, tower: m };
+    const m = activeTower(sim, towers(sim)) ?? first;
+    for (const t of [m, m + 1]) {
+      if (
+        t <= first &&
+        sim.atSquare(towerSquare(t, 0, 0)) === "r" &&
+        sim.atSquare(towerSquare(t, 1, -1)) === "P"
+      )
+        return { h, tower: t };
     }
     if (!rooksLeft() && bishopFree()) return { h, tower: -1 };
     const choice = towerMove(sim, towers(sim));
@@ -96,9 +102,9 @@ export function gameValue(pos: Position): GameValue {
     value.offLine = value.mateIn === null;
     return value;
   }
-  let r = 0;
-  for (let m = 0; m <= tw.first; m++) if (pos.atSquare(towerSquare(m, 0, 0)) === "r") r++;
-  value.r = r;
+  let r = tw.first + 1;
+  for (const m of tw.taken.keys()) if (m <= tw.first) r--;
+  value.r = Math.max(0, r);
   value.h = next.h;
   const shot = lastShot(pos);
   if (!shot) return value;
