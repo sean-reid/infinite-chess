@@ -365,7 +365,7 @@ interface Race0 extends Path {
 }
 
 // Bishops in the tower band above the channel can never reach the open area.
-const inTowerBand = (s: Square): boolean => s.x >= 47 && s.y >= 38 && s.y - s.x >= -8;
+export const inTowerBand = (s: Square): boolean => s.x >= 47 && s.y >= 38 && s.y - s.x >= -8;
 
 function bestRace(pos: Position, from: Square[], color: "w" | "b", approach = false): Race0 | null {
   const race = new Race(pos, color);

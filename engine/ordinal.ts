@@ -5,7 +5,7 @@ import { legalReach } from "./moves.ts";
 import { colorOf } from "./pieces.ts";
 import type { Position } from "./position.ts";
 import type { Square } from "./square.ts";
-import { activeTower, looseWhite, towerMove, towers } from "./white.ts";
+import { activeTower, inTowerBand, looseWhite, towerMove, towers } from "./white.ts";
 
 // The paper's bookkeeping for the main line: omega^3 r + omega^2 h + omega b + g.
 // r rook heights still to be chosen, h white moves until the next rook is
@@ -40,7 +40,21 @@ function movesToNextRook(pos: Position): { h: number; tower: number } | null {
     const reach = legalReach(sim, MATING_BISHOP);
     return !!reach && (reach.steps.length > 0 || reach.rays.length > 0);
   };
-  for (let h = 0; h <= H_CAP; h++) {
+  // A long hole march is h - 1 identical pawn steps; skip them by moving the
+  // hole to height 1 directly and counting.
+  let skipped = 0;
+  const active = activeTower(sim, tw);
+  const j = active === null ? undefined : tw.taken.get(active);
+  if (active !== null && j !== undefined) {
+    for (let h = 2; h < j; h++) {
+      if (sim.atSquare(towerSquare(active, -1, h))) continue;
+      sim.set(towerSquare(active, -1, h), "P");
+      sim.set(towerSquare(active, -1, 1), null);
+      skipped = h - 1;
+      break;
+    }
+  }
+  for (let h = skipped; h <= H_CAP; h++) {
     for (let m = first; m >= 0; m--) {
       if (sim.atSquare(towerSquare(m, 0, 0)) === "r" && sim.atSquare(towerSquare(m, 1, -1)) === "P")
         return { h, tower: m };
@@ -72,7 +86,7 @@ export function gameValue(pos: Position): GameValue {
   const value: GameValue = { r: null, h: null, b: null, g: null, mateIn: null, offLine: false };
   const mate = new Race(pos, "w");
   for (const s of looseWhite(pos)) {
-    const p = mate.within3(s) ?? mate.approach(s);
+    const p = mate.within3(s) ?? (inTowerBand(s) ? null : mate.approach(s));
     if (p && (value.mateIn === null || p.moves < value.mateIn)) value.mateIn = p.moves;
   }
   const tw = towers(pos);
