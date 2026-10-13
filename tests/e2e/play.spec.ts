@@ -68,9 +68,10 @@ test("the how-to opens and the theme toggles", async ({ page }) => {
   await page.locator("#help").getByRole("button", { name: "Close" }).click();
   await expect(page.locator("#help")).toBeHidden();
   const theme = page.locator("#theme-button");
-  const before = await theme.textContent();
+  const before = await theme.getAttribute("aria-pressed");
   await theme.click();
-  await expect(theme).not.toHaveText(before ?? "");
+  await expect(theme).toHaveText("Dark theme");
+  await expect(theme).toHaveAttribute("aria-pressed", before === "true" ? "false" : "true");
   await expect(page.locator("html")).toHaveAttribute("data-theme", /dark|light/);
 });
 
@@ -117,6 +118,7 @@ test("a game survives a reload and a link restores it", async ({ page, context }
   const fresh = await context.newPage();
   await fresh.goto("/#g=46.45-57.56;58.55-57.56");
   await expect(fresh.locator("#movelist li").first()).toContainText("P (58,55)×(57,56)");
+  fresh.once("dialog", (d) => d.accept());
   await fresh.getByRole("button", { name: "Resign" }).click();
   await expect(fresh.locator("#stats")).toContainText("1 finished");
 });
@@ -137,4 +139,54 @@ test("selecting a piece never moves the view", async ({ page }) => {
   await page.mouse.click(box.x + box.width / 2 - 48, box.y + box.height / 2 - 48);
   await expect(page.locator("#board")).toHaveAttribute("data-cx", "32");
   await expect(page.locator("#board")).toHaveAttribute("data-cy", "61");
+});
+
+const MATE_LINK =
+  "RYxBCgIxEAS7OzEIMUISwdOCgqse_IA-QC--YNmT_3-ETLLiabqma2aevP_M1HqoFYCAXIa9CHgPkCeM4y1B5yvY-980h7occ7mvLMdN2v7v3jHGx4GyDMh80aEx4V3jYJ2hmkNg8dt_y8pPyEkqLxKOyz6l7tVd5xC-";
+
+test("a finished game reads 0 and offers nothing to press but a new game", async ({
+  page,
+}, info) => {
+  await page.goto(`/#g=${MATE_LINK}`);
+  await expect(page.locator("#status")).toContainText("Checkmate. White wins after 25 moves.");
+  await expect(page.locator("#ordinal")).toHaveText("0");
+  await page.screenshot({ path: info.outputPath("mate.png") });
+  await expect(page.getByRole("button", { name: "Hint" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Resign" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Undo" })).toBeEnabled();
+});
+
+test("controls that would do nothing are disabled, and resign asks first", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Undo" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Resign" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Hint" })).toBeEnabled();
+  await tapSquare(page, 46, 45);
+  await tapSquare(page, 48, 47);
+  await expect(page.locator("#movelist li").first()).toContainText("×", { timeout: 15_000 });
+  page.once("dialog", (d) => d.dismiss());
+  await page.getByRole("button", { name: "Resign" }).click();
+  await expect(page.locator("#status")).toHaveText(/black to play/);
+  page.once("dialog", (d) => d.accept());
+  await page.getByRole("button", { name: "Resign" }).click();
+  await expect(page.locator("#status")).toContainText("Black resigned after 1 moves.");
+});
+
+test("a shared link plays without replacing the saved game, and the hash is live", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await tapSquare(page, 46, 45);
+  await tapSquare(page, 48, 47);
+  await expect(page.locator("#movelist li").first()).toContainText("×", { timeout: 15_000 });
+  const saved = await page.evaluate(() => localStorage.getItem("infinite-chess:game"));
+  await page.goto(`/#g=${MATE_LINK}`);
+  await expect(page.locator("#status")).toContainText("Checkmate");
+  expect(await page.evaluate(() => localStorage.getItem("infinite-chess:game"))).toBe(saved);
+  await page.evaluate(() => {
+    location.hash = "#g=46.45-57.56;58.55-57.56";
+  });
+  await expect(page.locator("#movelist li").first()).toContainText("P (58,55)×(57,56)");
+  await page.goto("/");
+  await expect(page.locator("#movelist li").first()).toContainText("P (49,46)×(48,47)");
 });

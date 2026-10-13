@@ -81,6 +81,16 @@ export async function hashMoves(): Promise<Move[] | null> {
 }
 
 let pending = 0;
+let frozenAt = -1;
+
+// A game opened from a link is not saved over the player's own until it is
+// played on: storage stays as it was while the move list has this length.
+// Infinity holds it until the link has been read.
+export function freezeStorage(length: number): void {
+  frozenAt = length;
+}
+
+export const openedOnLink = (): boolean => location.hash.startsWith("#g=");
 
 // Writes the hash and local storage for the latest move list; an older
 // encode that finishes late is dropped.
@@ -88,6 +98,8 @@ export async function persist(moves: Move[]): Promise<void> {
   const ticket = ++pending;
   const packed = await encodeMoves(moves);
   if (ticket !== pending) return;
+  if (frozenAt === Infinity || moves.length === frozenAt) return;
+  frozenAt = -1;
   writeText(GAME_KEY, packed);
   const next = packed ? `#g=${packed}` : "";
   if (location.hash === next || (!next && !location.hash)) return;

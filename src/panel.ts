@@ -17,6 +17,11 @@ const DIRECTION: Record<string, string> = {
 };
 
 export function renderValue(ordinal: HTMLElement, terms: HTMLElement, state: GameState): void {
+  if (state.result === "checkmate" && state.pos.turn === "b") {
+    ordinal.textContent = "0";
+    terms.hidden = true;
+    return;
+  }
   const v = state.value;
   if (!v) return;
   ordinal.innerHTML = formatValue(v);
@@ -88,6 +93,18 @@ export function renderStatus(el: HTMLElement, state: GameState): void {
     text = `${why}move ${n} · black to play`;
   }
   el.textContent = text;
+  el.classList.toggle("over", state.result !== null);
+}
+
+// Buttons that would do nothing right now say so.
+export function renderControls(state: GameState): void {
+  const set = (id: string, disabled: boolean) => {
+    const b = document.getElementById(id) as HTMLButtonElement | null;
+    if (b) b.disabled = disabled;
+  };
+  set("hint", state.phase !== "black");
+  set("undo", state.pos.history.length === 0);
+  set("resign", state.phase === "over" || state.pos.history.length === 0);
 }
 
 // Open rays get a number instead of a tap: how far along this line.

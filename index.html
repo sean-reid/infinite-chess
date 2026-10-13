@@ -42,7 +42,7 @@
       </div>
       <nav class="tools" aria-label="Site">
         <button type="button" id="help-button">How to play</button>
-        <button type="button" id="theme-button" aria-pressed="false">Dark</button>
+        <button type="button" id="theme-button" aria-pressed="false">Dark theme</button>
       </nav>
     </header>
 
@@ -81,12 +81,12 @@
               <dd class="what">forced replies left</dd>
             </div>
           </dl>
-          <p class="status" id="status"></p>
+          <p class="status" id="status" aria-live="polite"></p>
         </section>
 
         <section class="prompt" id="prompt" hidden></section>
 
-        <p class="hint-text" id="hint-text" hidden></p>
+        <p class="hint-text" id="hint-text" hidden aria-live="polite"></p>
 
         <section class="controls" aria-label="Game">
           <button type="button" id="new-game">New game</button>

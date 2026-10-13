@@ -1,9 +1,24 @@
 import { Board } from "./board.ts";
 import { Game } from "./game.ts";
 import { attachInput } from "./input.ts";
-import { renderHint, renderMoves, renderPrompt, renderStatus, renderValue } from "./panel.ts";
+import {
+  renderControls,
+  renderHint,
+  renderMoves,
+  renderPrompt,
+  renderStatus,
+  renderValue,
+} from "./panel.ts";
 import { NARROW_BELOW, NARROW_VIEW, WIDE_VIEW } from "./views.ts";
-import { THEME_KEY, hashMoves, loadGame, persist, writeText } from "./store.ts";
+import {
+  THEME_KEY,
+  freezeStorage,
+  hashMoves,
+  loadGame,
+  openedOnLink,
+  persist,
+  writeText,
+} from "./store.ts";
 import { renderStats } from "./panel.ts";
 import { KEY_BISHOP, BLACK_KING } from "../engine/geometry.ts";
 import { inCheck } from "../engine/moves.ts";
@@ -11,6 +26,7 @@ import { inCheck } from "../engine/moves.ts";
 const canvas = document.getElementById("board") as HTMLCanvasElement;
 const narrow = window.innerWidth < NARROW_BELOW;
 const board = new Board(canvas, { ...(narrow ? NARROW_VIEW : WIDE_VIEW) });
+if (openedOnLink()) freezeStorage(Infinity);
 const game = new Game();
 
 const movelist = document.getElementById("movelist") as HTMLOListElement;
@@ -60,6 +76,7 @@ game.onChange((st) => {
   renderStatus(status, st);
   renderValue(ordinal, terms, st);
   renderHint(hintText, st);
+  renderControls(st);
   renderPrompt(prompt, st, (from, ray, n) => {
     game.playBlack({ from, to: { x: from.x + ray.dir.dx * n, y: from.y + ray.dir.dy * n } });
   });
@@ -69,6 +86,8 @@ game.onChange((st) => {
     seenMoves = st.pos.history.length;
     if (last && !board.inView(last.to)) board.centreOn(last.to);
   }
+  // A hint is an explicit request, so the piece it names comes into view.
+  if (st.hint?.move && st.selected && !board.inView(st.selected)) board.centreOn(st.selected);
   paint();
 });
 
@@ -81,13 +100,36 @@ layout();
 window.addEventListener("resize", layout);
 renderStatus(status, game.state);
 renderStats(statsEl, game.state);
-void (async () => {
+renderControls(game.state);
+// A shared link plays in this tab without touching the game kept in local
+// storage until a move is made in it.
+async function openFromLocation(): Promise<void> {
+  if (openedOnLink()) freezeStorage(Infinity);
   try {
-    game.load((await hashMoves()) ?? (await loadGame()));
+    const linked = await hashMoves();
+    if (linked) {
+      freezeStorage(linked.length);
+      const taken = game.load(linked);
+      if (taken < linked.length)
+        status.textContent =
+          "That link did not fully load; the game starts where it stopped making sense.";
+    } else if (openedOnLink()) {
+      status.textContent = "That link did not decode. Starting fresh.";
+      freezeStorage(0);
+      game.restart();
+    } else {
+      game.load(await loadGame());
+    }
   } catch {
     game.restart();
   }
-})();
+}
+void openFromLocation();
+window.addEventListener("hashchange", () => {
+  if (openedOnLink()) freezeStorage(Infinity);
+  game.restart();
+  void openFromLocation();
+});
 
 const share = document.getElementById("share") as HTMLButtonElement;
 share.addEventListener("click", async () => {
@@ -133,17 +175,16 @@ document.getElementById("hint")?.addEventListener("click", () => game.askHint())
 
 document.getElementById("new-game")?.addEventListener("click", () => game.restart());
 document.getElementById("undo")?.addEventListener("click", () => game.undo());
-document.getElementById("resign")?.addEventListener("click", () => game.resign());
+document.getElementById("resign")?.addEventListener("click", () => {
+  if (game.state.pos.history.length && confirm("Resign this game?")) game.resign();
+});
 
 const theme = document.getElementById("theme-button") as HTMLButtonElement;
 const systemDark = matchMedia("(prefers-color-scheme: dark)");
 const isDark = () =>
   document.documentElement.dataset.theme === "dark" ||
   (!document.documentElement.dataset.theme && systemDark.matches);
-const labelTheme = () => {
-  theme.textContent = isDark() ? "Light" : "Dark";
-  theme.setAttribute("aria-pressed", String(isDark()));
-};
+const labelTheme = () => theme.setAttribute("aria-pressed", String(isDark()));
 labelTheme();
 theme.addEventListener("click", () => {
   document.documentElement.dataset.theme = isDark() ? "light" : "dark";

@@ -140,7 +140,14 @@ export class Board {
         if (code) this.piece({ x, y }, code);
       }
     }
-    if (marks.selected) this.outline(marks.selected, palette.accent, Math.max(1.5, scale / 10));
+    if (marks.selected) {
+      const [px, py] = this.origin(marks.selected);
+      ctx.fillStyle = palette.accent;
+      ctx.globalAlpha = 0.18;
+      ctx.fillRect(px, py, scale, scale);
+      ctx.globalAlpha = 1;
+      this.outline(marks.selected, palette.accent, Math.max(1.5, scale / 10));
+    }
     const dots: Square[] = [...(marks.steps ?? [])];
     const captures: Square[] = [];
     for (const r of marks.rays ?? []) {
