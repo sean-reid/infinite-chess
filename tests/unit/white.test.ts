@@ -145,6 +145,39 @@ describe("white against deviations", () => {
     LONG,
   );
 
+  it(
+    "still wins in a middle tower when the rook never moves",
+    () => {
+      const { pos, reasons } = play(scripted({ t: 5, height: 0, cannons: 1 }, 400));
+      expect(outcome(pos)).toBe("checkmate");
+      expect(reasons).toContain("taking the rook of tower 1");
+      expect(reasons.some((r) => r.startsWith("opening tower 1"))).toBe(true);
+      expect(reasons).not.toContain("waiting");
+    },
+    LONG,
+  );
+
+  it(
+    "still wins when the attacked rook takes a wall pawn instead of climbing",
+    () => {
+      for (const side of [-1, 1]) {
+        const black = new ScriptedBlack({ t: 5, height: 2, cannons: 1 });
+        const sideways: BlackMove = (pos: Position) => {
+          const home = sq(47, 57);
+          if (pos.atSquare(home) === "r" && pos.at(48, 56) === "P") {
+            const m = { from: home, to: sq(47 + side, 57) };
+            if (isLegal(pos, m)) return m;
+          }
+          return black.choose(pos);
+        };
+        const { pos, reasons } = play(Array.from({ length: 400 }, () => sideways));
+        expect(outcome(pos), `side ${side}`).toBe("checkmate");
+        expect(reasons).not.toContain("waiting");
+      }
+    },
+    LONG,
+  );
+
   it("takes the key bishop if black leaves it at home", () => {
     const { pos, reasons } = play(
       [

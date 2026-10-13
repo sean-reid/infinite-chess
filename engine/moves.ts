@@ -152,8 +152,18 @@ export function attackersOf(pos: Position, sq: Square, by: Color, firstOnly = fa
 export const inCheck = (pos: Position, color: Color): boolean =>
   isAttacked(pos, pos.kings[color], color === "w" ? "b" : "w");
 
+// Past this the board arithmetic stops being exact and nothing is there.
+export const COORD_LIMIT = 1_000_000_000;
+
+const inRange = (s: Square): boolean =>
+  Number.isSafeInteger(s.x) &&
+  Number.isSafeInteger(s.y) &&
+  Math.abs(s.x) <= COORD_LIMIT &&
+  Math.abs(s.y) <= COORD_LIMIT;
+
 // True when the move leaves the mover's own king safe.
 export function isLegal(pos: Position, m: Move): boolean {
+  if (!inRange(m.from) || !inRange(m.to)) return false;
   const piece = pos.atSquare(m.from);
   if (!piece || colorOf(piece) !== pos.turn) return false;
   const reach = pseudoReach(pos, m.from);

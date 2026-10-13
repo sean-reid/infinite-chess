@@ -11,7 +11,7 @@ import {
 import { isLegal, pseudoReach } from "./moves.ts";
 import type { Move, Position } from "./position.ts";
 import { sameSquare, type Square } from "./square.ts";
-import { towers } from "./white.ts";
+import { activeTower, towers } from "./white.ts";
 
 // Black's main line, read off the position: what the paper says black should
 // do next. Used for the hint and for the scripted black in tests.
@@ -28,7 +28,9 @@ const step = (s: Square, dx: number, dy: number): Square => ({ x: s.x + dx, y: s
 export function attackedRook(pos: Position): number | null {
   const tw = towers(pos);
   if (tw.first === null) return null;
-  for (let m = tw.first; m >= 0; m--) {
+  const active = activeTower(pos, tw) ?? tw.first;
+  for (const m of [active, active + 1]) {
+    if (m > tw.first) continue;
     if (pos.atSquare(towerSquare(m, 0, 0)) === "r" && pos.atSquare(towerSquare(m, 1, -1)) === "P")
       return m;
   }

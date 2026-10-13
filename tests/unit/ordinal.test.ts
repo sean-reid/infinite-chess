@@ -63,6 +63,23 @@ describe("the game value along the main line", () => {
   });
 }, 120_000);
 
+describe("the value far out", () => {
+  it("answers in constant time when the key bishop went a million squares out", () => {
+    const pos = new Position();
+    pos.play({ from: { x: 46, y: 45 }, to: { x: 46 + 999_999, y: 45 + 999_999 } });
+    const c = chooseWhite(pos);
+    expect(c?.reason).toBe("taking the piece that just moved");
+    pos.play(
+      (c as { move: { from: { x: number; y: number }; to: { x: number; y: number } } }).move,
+    );
+    const started = performance.now();
+    const v = gameValue(pos);
+    expect(performance.now() - started).toBeLessThan(2000);
+    expect(v.r).toBe(333_334);
+    expect(v.offLine).toBe(false);
+  });
+});
+
 describe("black's main line hint", () => {
   it("starts with the key bishop and names the direction", () => {
     const h = mainLine(new Position());

@@ -125,3 +125,26 @@ describe("check from far away", () => {
     expect(reach?.steps).toContainEqual(sq(-5, 57 + 37));
   });
 });
+
+describe("long rays stay honest", () => {
+  it("does not let a rook sent far up come back down through pieces", () => {
+    const pos = new Position();
+    pos.play({ from: sq(46, 45), to: sq(48, 47) });
+    pos.play({ from: sq(49, 46), to: sq(48, 47) });
+    const up = { from: sq(44, 54), to: sq(44, 150_054) };
+    expect(isLegal(pos, up)).toBe(true);
+    pos.play(up);
+    pos.turn = "b";
+    expect(isLegal(pos, { from: sq(44, 150_054), to: sq(44, 20) })).toBe(false);
+    expect(isLegal(pos, { from: sq(44, 150_054), to: sq(44, 53) })).toBe(true);
+    expect(isLegal(pos, { from: sq(44, 150_054), to: sq(44, 55) })).toBe(true);
+    const down = rayEnd(pos, sq(44, 150_054), { dx: 0, dy: -1 });
+    expect(down).toEqual({ length: 150_000, blocker: sq(44, 53) });
+  });
+
+  it("refuses coordinates the board cannot represent", () => {
+    const pos = new Position();
+    expect(isLegal(pos, { from: sq(46, 45), to: sq(1e20, 1e20) })).toBe(false);
+    expect(isLegal(pos, { from: sq(46, 45), to: sq(46 + 2 ** 53, 45 + 2 ** 53) })).toBe(false);
+  });
+});

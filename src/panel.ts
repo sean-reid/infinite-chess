@@ -79,6 +79,8 @@ export function renderStatus(el: HTMLElement, state: GameState): void {
         : "Checkmate. Black wins.";
   } else if (state.result === "resigned") {
     text = `Black resigned after ${n - 1} moves.`;
+  } else if (state.result === "stalled") {
+    text = `White found no move after ${n - 1} moves. That is a bug worth a link.`;
   } else if (state.phase === "white") {
     text = `move ${n} · white is thinking`;
   } else {

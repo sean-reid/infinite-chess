@@ -129,8 +129,8 @@ test("selecting a piece never moves the view", async ({ page }) => {
   await page.getByRole("button", { name: "Throne room" }).click();
   await page.focus("#board");
   for (let i = 0; i < 4; i++) await page.keyboard.press("+");
-  const before = await page.locator("#board").evaluate((c) => [c.dataset.cx, c.dataset.cy]);
-  expect(before).toEqual(["32", "61"]);
+  await expect(page.locator("#board")).toHaveAttribute("data-cx", "32");
+  await expect(page.locator("#board")).toHaveAttribute("data-cy", "61");
   const box = await page.locator("#board").boundingBox();
   if (!box) throw new Error("no board");
   await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2 + 64);
