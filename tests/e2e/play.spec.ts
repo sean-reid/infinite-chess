@@ -110,9 +110,31 @@ test("a game survives a reload and a link restores it", async ({ page, context }
   await page.reload();
   await expect(page.locator("#movelist li")).toHaveCount(1);
   await expect(page.locator("#status")).toHaveText(/move 2 · black to play/);
+  await page.goto("/");
+  await expect(page.locator("#movelist li")).toHaveCount(1);
+  await page.getByRole("button", { name: "Undo" }).click();
+  await expect(page.locator("#movelist li")).toHaveCount(0);
   const fresh = await context.newPage();
   await fresh.goto("/#g=46.45-57.56;58.55-57.56");
   await expect(fresh.locator("#movelist li").first()).toContainText("P (58,55)×(57,56)");
   await fresh.getByRole("button", { name: "Resign" }).click();
   await expect(fresh.locator("#stats")).toContainText("1 finished");
+});
+
+test("selecting a piece never moves the view", async ({ page }) => {
+  await page.goto("/");
+  await tapSquare(page, 46, 45);
+  await tapSquare(page, 48, 47);
+  await expect(page.locator("#movelist li").first()).toContainText("×", { timeout: 15_000 });
+  await page.getByRole("button", { name: "Throne room" }).click();
+  await page.focus("#board");
+  for (let i = 0; i < 4; i++) await page.keyboard.press("+");
+  const before = await page.locator("#board").evaluate((c) => [c.dataset.cx, c.dataset.cy]);
+  expect(before).toEqual(["32", "61"]);
+  const box = await page.locator("#board").boundingBox();
+  if (!box) throw new Error("no board");
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2 + 64);
+  await page.mouse.click(box.x + box.width / 2 - 48, box.y + box.height / 2 - 48);
+  await expect(page.locator("#board")).toHaveAttribute("data-cx", "32");
+  await expect(page.locator("#board")).toHaveAttribute("data-cy", "61");
 });
