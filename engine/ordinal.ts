@@ -1,11 +1,11 @@
 import { Race } from "./bishops.ts";
-import { BOX_BISHOPS, MATING_BISHOP, cannonSquare, gateSquare, towerSquare } from "./geometry.ts";
+import { MATING_BISHOP, cannonSquare, gateSquare, towerSquare } from "./geometry.ts";
 import { freshGates, lastShot, wingOfHallway } from "./mainline.ts";
 import { legalReach } from "./moves.ts";
 import { colorOf } from "./pieces.ts";
 import type { Position } from "./position.ts";
 import type { Square } from "./square.ts";
-import { activeTower, towerMove, towers } from "./white.ts";
+import { activeTower, looseWhite, towerMove, towers } from "./white.ts";
 
 // The paper's bookkeeping for the main line: omega^3 r + omega^2 h + omega b + g.
 // r rook heights still to be chosen, h white moves until the next rook is
@@ -22,13 +22,6 @@ export interface GameValue {
 }
 
 const H_CAP = 20_000;
-
-function looseWhite(pos: Position): Square[] {
-  const out: Square[] = [];
-  for (const [s, c] of pos.movedPieces()) if (c === "B") out.push(s);
-  for (const s of [MATING_BISHOP, ...BOX_BISHOPS]) if (pos.atSquare(s) === "B") out.push(s);
-  return out;
-}
 
 // White moves on the main line until a rook is attacked, or, once no rook is
 // left, until the mating bishop can move: white's tower plan played against a
