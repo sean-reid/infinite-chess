@@ -110,6 +110,10 @@ test("a game survives a reload and a link restores it", async ({ page, context }
   await page.reload();
   await expect(page.locator("#movelist li")).toHaveCount(1);
   await expect(page.locator("#status")).toHaveText(/move 2 · black to play/);
+  await page.goto("/");
+  await expect(page.locator("#movelist li")).toHaveCount(1);
+  await page.getByRole("button", { name: "Undo" }).click();
+  await expect(page.locator("#movelist li")).toHaveCount(0);
   const fresh = await context.newPage();
   await fresh.goto("/#g=46.45-57.56;58.55-57.56");
   await expect(fresh.locator("#movelist li").first()).toContainText("P (58,55)×(57,56)");

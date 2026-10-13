@@ -41,12 +41,23 @@ export interface Stats {
 
 const EMPTY: Stats = { games: 0, finished: 0, longest: 0, farthest: 0 };
 
-function read<T>(key: string, fallback: T): T {
+function read<T extends object>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
-    return raw ? { ...fallback, ...(JSON.parse(raw) as T) } : fallback;
+    const parsed: unknown = raw ? JSON.parse(raw) : null;
+    return parsed && typeof parsed === "object" ? { ...fallback, ...(parsed as T) } : fallback;
   } catch {
     return fallback;
+  }
+}
+
+function readText(key: string): string {
+  try {
+    const raw = localStorage.getItem(key);
+    const parsed: unknown = raw ? JSON.parse(raw) : "";
+    return typeof parsed === "string" ? parsed : "";
+  } catch {
+    return "";
   }
 }
 
@@ -58,7 +69,7 @@ function write(key: string, value: unknown): void {
   }
 }
 
-export const loadGame = (): Move[] => decodeMoves(read<string>(GAME_KEY, "")) ?? [];
+export const loadGame = (): Move[] => decodeMoves(readText(GAME_KEY)) ?? [];
 export const saveGame = (moves: Move[]): void => write(GAME_KEY, encodeMoves(moves));
 export const loadStats = (): Stats => read<Stats>(STATS_KEY, EMPTY);
 export const saveStats = (s: Stats): void => write(STATS_KEY, s);
