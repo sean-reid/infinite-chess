@@ -51,13 +51,13 @@ const SUPPORTS: Constraint[][] = [
     [0, -1, -37],
     [1, 1, 77],
   ],
-  // gateway wings: x <= 43, x + y <= 88, 8x - 7(x + y) >= -320, 4(x - y) - 3(x + y) >= -360, 2x - (x + y) <= 12
+  // gateway wings: x <= 43, x + y <= 88, 8x - 7(x + y) >= -320, 4(x - y) - 3(x + y) >= -360, x - y <= 9
   [
     [-1, 0, -43],
     [-1, -1, -88],
     [1, -7, -320],
     [1, -7, -360],
-    [-1, 1, -12],
+    [-1, 1, -9],
   ],
 ];
 
@@ -79,8 +79,8 @@ function unreachable(x: number, y: number, d: Dir): boolean {
 // strip, and up-right along the band, three empty squares in a row mean the ray
 // is empty for ever.
 function periodicTower(x: number, y: number, d: Dir): boolean {
-  if (x < 49 || y < 38 || y - x < -8) return false;
-  if (d.dx === 1 && d.dy === 1) return true;
+  if (x < 43 || y < 38 || y - x < -8) return false;
+  if (d.dx === 1 && d.dy === 1) return x >= 49;
   if (d.dx === 0 && d.dy === 1) {
     const k = Math.floor((x - 43) / 3);
     return y - 3 * k > 68;
