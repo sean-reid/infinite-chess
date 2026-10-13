@@ -46,6 +46,7 @@ export class Game {
     };
     this.worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
     this.worker.onmessage = (e: MessageEvent<WhiteReply>) => this.onReply(e.data);
+    this.worker.onerror = () => this.onWorkerFailure();
     this.askValue();
   }
 
@@ -173,6 +174,16 @@ export class Game {
       st.phase = "black";
       this.emit();
     }
+  }
+
+  // A thrown error in the worker would otherwise leave "white is thinking" up for ever.
+  private onWorkerFailure(): void {
+    const st = this.state;
+    if (st.phase !== "white") return;
+    st.phase = "over";
+    st.result = "resigned";
+    st.lastReason = "white has no move";
+    this.emit();
   }
 
   private onReply(reply: WhiteReply): void {
