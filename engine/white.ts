@@ -29,14 +29,14 @@ export interface Choice {
   reason: string;
 }
 
-interface Towers {
+export interface Towers {
   // The tower unlocked by the pawn that took the key bishop, if that has happened.
   first: number | null;
   // Towers whose rook has been captured, with the height it was taken at.
   taken: Map<number, number>;
 }
 
-function towers(pos: Position): Towers {
+export function towers(pos: Position): Towers {
   let first: number | null = null;
   const taken = new Map<number, number>();
   for (const p of pos.history) {
@@ -212,7 +212,7 @@ function rookWorthTaking(pos: Position, last: Played, tw: Towers): boolean {
   return pos.history.filter((p) => p.piece === "r" && sameSquare(p.to, last.from)).length > 0;
 }
 
-function activeTower(pos: Position, tw: Towers): number | null {
+export function activeTower(pos: Position, tw: Towers): number | null {
   if (tw.first === null) return null;
   let m = tw.first;
   while (m > 0 && tw.taken.has(m) && columnClosed(pos, m, tw.taken.get(m) as number)) m--;
@@ -320,7 +320,7 @@ function climbMove(pos: Position): Move | null {
   return null;
 }
 
-function towerMove(pos: Position, tw: Towers): Choice | null {
+export function towerMove(pos: Position, tw: Towers): Choice | null {
   const climb = climbMove(pos);
   if (climb) return { move: climb, reason: "climbing the inner wall" };
   if (tw.first === null) return null;

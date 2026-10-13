@@ -26,8 +26,8 @@ test("black moves the key bishop by tapping and white takes it", async ({ page }
   await expect(page.locator("#prompt label")).toContainText("up and right");
   await page.screenshot({ path: info.outputPath("selected.png") });
   await tapSquare(page, 48, 47);
-  await expect(page.locator("#movelist li").first()).toContainText("b (46, 45) → (48, 47)");
-  await expect(page.locator("#movelist li").first()).toContainText("P (49, 46) × (48, 47)", {
+  await expect(page.locator("#movelist li").first()).toContainText("b (46,45)→(48,47)");
+  await expect(page.locator("#movelist li").first()).toContainText("P (49,46)×(48,47)", {
     timeout: 15_000,
   });
   await expect(page.locator("#status")).toHaveText(/move 2 · black to play/);
@@ -40,8 +40,8 @@ test("an open ray takes a number and white answers out there", async ({ page }) 
   const input = page.locator("#prompt input");
   await input.fill("11");
   await page.locator("#prompt button").click();
-  await expect(page.locator("#movelist li").first()).toContainText("b (46, 45) → (57, 56)");
-  await expect(page.locator("#movelist li").first()).toContainText("P (58, 55) × (57, 56)", {
+  await expect(page.locator("#movelist li").first()).toContainText("b (46,45)→(57,56)");
+  await expect(page.locator("#movelist li").first()).toContainText("P (58,55)×(57,56)", {
     timeout: 15_000,
   });
 });
@@ -82,4 +82,21 @@ test("the board pans with the keyboard and jumps to the throne room", async ({ p
   await page.keyboard.press("ArrowLeft");
   await page.screenshot({ path: info.outputPath("throne.png") });
   await expect(page.locator("#board")).toBeVisible();
+});
+
+test("the game value and the hint follow the position", async ({ page }, info) => {
+  await page.goto("/");
+  await expect(page.locator("#ordinal")).toHaveText("ω4");
+  await expect(page.locator("#terms")).toBeHidden();
+  await page.getByRole("button", { name: "Hint" }).click();
+  await expect(page.locator("#hint-text")).toContainText("key bishop");
+  await expect(page.locator("#prompt")).toBeVisible();
+  await tapSquare(page, 48, 47);
+  await expect(page.locator("#movelist li").first()).toContainText("×", { timeout: 15_000 });
+  await expect(page.locator("#ordinal")).toContainText("ω3", { timeout: 15_000 });
+  await expect(page.locator("#terms")).toBeVisible();
+  await expect(page.locator('[data-term="r"]')).toHaveText("1");
+  await page.getByRole("button", { name: "Hint" }).click();
+  await expect(page.locator("#hint-text")).toContainText("cannon");
+  await page.screenshot({ path: info.outputPath("value-and-hint.png") });
 });

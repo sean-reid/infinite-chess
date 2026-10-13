@@ -1,7 +1,9 @@
 import { isLegal, legalReach, outcome, type Reach } from "../engine/moves.ts";
 import { Position, type Move, type Played } from "../engine/position.ts";
 import { sameSquare, type Square } from "../engine/square.ts";
-import type { WhiteReply, WhiteRequest } from "./worker.ts";
+import type { Hint } from "../engine/mainline.ts";
+import type { GameValue } from "../engine/ordinal.ts";
+import type { Focus, WhiteReply, WhiteRequest } from "./worker.ts";
 
 export type Phase = "black" | "white" | "over";
 
@@ -12,6 +14,9 @@ export interface GameState {
   reach: Reach | null;
   lastReason: string;
   result: "checkmate" | "resigned" | null;
+  value: GameValue | null;
+  focus: Focus;
+  hint: Hint | null;
 }
 
 export type Listener = (state: GameState) => void;
@@ -32,9 +37,28 @@ export class Game {
       reach: null,
       lastReason: "",
       result: null,
+      value: null,
+      focus: { tower: null, cannon: null, wing: null },
+      hint: null,
     };
     this.worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
-    this.worker.onmessage = (e: MessageEvent<WhiteReply>) => this.onWhite(e.data);
+    this.worker.onmessage = (e: MessageEvent<WhiteReply>) => this.onReply(e.data);
+    this.askValue();
+  }
+
+  private movesSoFar(): Move[] {
+    return this.state.pos.history.map((p) => ({ from: p.from, to: p.to }));
+  }
+
+  private askValue(): void {
+    const req: WhiteRequest = { id: ++this.requestId, kind: "value", moves: this.movesSoFar() };
+    this.worker.postMessage(req);
+  }
+
+  askHint(): void {
+    if (this.state.phase !== "black") return;
+    const req: WhiteRequest = { id: ++this.requestId, kind: "hint", moves: this.movesSoFar() };
+    this.worker.postMessage(req);
   }
 
   onChange(l: Listener): void {
@@ -52,6 +76,7 @@ export class Game {
   select(s: Square | null): void {
     const st = this.state;
     if (st.phase !== "black") return;
+    st.hint = null;
     if (!s || (st.selected && sameSquare(st.selected, s))) {
       st.selected = null;
       st.reach = null;
@@ -82,6 +107,7 @@ export class Game {
     st.pos.play(m);
     st.selected = null;
     st.reach = null;
+    st.hint = null;
     this.afterMove();
     return true;
   }
@@ -98,10 +124,7 @@ export class Game {
     if (st.pos.turn === "w") {
       st.phase = "white";
       this.emit();
-      const req: WhiteRequest = {
-        id: ++this.requestId,
-        moves: st.pos.history.map((p) => ({ from: p.from, to: p.to })),
-      };
+      const req: WhiteRequest = { id: ++this.requestId, kind: "white", moves: this.movesSoFar() };
       this.worker.postMessage(req);
     } else {
       st.phase = "black";
@@ -109,9 +132,26 @@ export class Game {
     }
   }
 
-  private onWhite(reply: WhiteReply): void {
+  private onReply(reply: WhiteReply): void {
     const st = this.state;
-    if (reply.id !== this.requestId || st.phase !== "white") return;
+    if (reply.id !== this.requestId) return;
+    if (reply.kind === "value") {
+      st.value = reply.value;
+      st.focus = reply.focus;
+      this.emit();
+      return;
+    }
+    if (reply.kind === "hint") {
+      st.hint = reply.hint;
+      if (reply.hint.move) {
+        const reach = legalReach(st.pos, reply.hint.move.from);
+        st.selected = reach ? reply.hint.move.from : null;
+        st.reach = reach;
+      }
+      this.emit();
+      return;
+    }
+    if (st.phase !== "white") return;
     if (!reply.move || !isLegal(st.pos, reply.move)) {
       st.phase = "over";
       st.result = "resigned";
@@ -121,6 +161,8 @@ export class Game {
     }
     st.pos.play(reply.move);
     st.lastReason = reply.reason;
+    st.value = reply.value;
+    st.focus = reply.focus;
     this.afterMove();
   }
 
@@ -137,7 +179,9 @@ export class Game {
     st.selected = null;
     st.reach = null;
     st.lastReason = "";
+    st.hint = null;
     this.emit();
+    this.askValue();
   }
 
   resign(): void {
@@ -158,6 +202,8 @@ export class Game {
     st.selected = null;
     st.reach = null;
     st.lastReason = "";
+    st.hint = null;
     this.emit();
+    this.askValue();
   }
 }
