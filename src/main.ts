@@ -21,8 +21,12 @@ const terms = document.getElementById("terms") as HTMLElement;
 const hintText = document.getElementById("hint-text") as HTMLElement;
 const statsEl = document.getElementById("stats") as HTMLElement;
 
+let seenMoves = 0;
+
 function paint(): void {
   const st = game.state;
+  canvas.dataset.cx = String(board.view.cx);
+  canvas.dataset.cy = String(board.view.cy);
   const last = st.pos.history.at(-1);
   const king = st.pos.kings[st.pos.turn];
   board.draw(st.pos, {
@@ -51,8 +55,12 @@ game.onChange((st) => {
   renderPrompt(prompt, st, (from, ray, n) => {
     game.playBlack({ from, to: { x: from.x + ray.dir.dx * n, y: from.y + ray.dir.dy * n } });
   });
+  // Follow a move that lands off screen, but never on a selection or a redraw.
   const last = st.pos.history.at(-1);
-  if (last && !board.inView(last.to)) board.centreOn(last.to);
+  if (st.pos.history.length !== seenMoves) {
+    seenMoves = st.pos.history.length;
+    if (last && !board.inView(last.to)) board.centreOn(last.to);
+  }
   paint();
 });
 
