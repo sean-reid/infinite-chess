@@ -1,0 +1,144 @@
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/fonts/source-serif-4-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/fonts/source-serif-4-semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/jetbrains-mono-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/jetbrains-mono-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --paper: #f4efe6;
+  --ink: #1b1a17;
+  --ink-soft: #625c51;
+  --rule: #c9c1b1;
+  --shade: #e8e1d3;
+  --accent: #b3301b;
+  --serif: "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #161513;
+    --ink: #ebe5d9;
+    --ink-soft: #a29b8d;
+    --rule: #3a3731;
+    --shade: #22201c;
+    --accent: #e0553c;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #161513;
+  --ink: #ebe5d9;
+  --ink-soft: #a29b8d;
+  --rule: #3a3731;
+  --shade: #22201c;
+  --accent: #e0553c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+  min-height: 44px;
+  accent-color: var(--accent);
+}
+
+button {
+  background: none;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  padding: 0 0.75rem;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.masthead,
+main,
+.colophon {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.wordmark {
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin: 1.25rem 0 0;
+}
+
+.lede {
+  color: var(--ink-soft);
+  margin: 0.25rem 0 1rem;
+}
+
+.colophon {
+  border-top: 1px solid var(--rule);
+  margin-top: 2rem;
+  padding-top: 0.75rem;
+  padding-bottom: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.colophon a {
+  color: inherit;
+}

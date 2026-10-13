@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>infinite-chess</title>
+    <meta
+      name="description"
+      content="Play black in the infinite chess position with game value omega to the fourth."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="/fonts/source-serif-4-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/jetbrains-mono-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <script>
+      try {
+        var t = localStorage.getItem("infinite-chess:theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <h1 class="wordmark">infinite-chess</h1>
+      <p class="lede">
+        White has a forced win from this position. You play black and decide how long it takes.
+      </p>
+    </header>
+    <main id="main"></main>
+    <footer class="colophon">
+      <a href="https://github.com/sean-reid/infinite-chess">Source</a>
+      <a href="https://arxiv.org/abs/1510.08155">Evans, Hamkins and Perlmutter, 2015</a>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
