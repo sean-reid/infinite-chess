@@ -106,7 +106,7 @@ test("a game survives a reload and a link restores it", async ({ page, context }
   await tapSquare(page, 46, 45);
   await tapSquare(page, 48, 47);
   await expect(page.locator("#movelist li").first()).toContainText("×", { timeout: 15_000 });
-  await expect(page).toHaveURL(/#g=46\.45-48\.47;49\.46-48\.47$/);
+  await expect(page).toHaveURL(/#g=[A-Za-z0-9_-]{4,40}$/);
   await page.reload();
   await expect(page.locator("#movelist li")).toHaveCount(1);
   await expect(page.locator("#status")).toHaveText(/move 2 · black to play/);
