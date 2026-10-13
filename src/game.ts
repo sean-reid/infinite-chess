@@ -14,7 +14,7 @@ export interface GameState {
   selected: Square | null;
   reach: Reach | null;
   lastReason: string;
-  result: "checkmate" | "resigned" | null;
+  result: "checkmate" | "resigned" | "stalled" | null;
   value: GameValue | null;
   focus: Focus;
   hint: Hint | null;
@@ -181,7 +181,7 @@ export class Game {
     const st = this.state;
     if (st.phase !== "white") return;
     st.phase = "over";
-    st.result = "resigned";
+    st.result = "stalled";
     st.lastReason = "white has no move";
     this.emit();
   }
@@ -208,7 +208,7 @@ export class Game {
     if (st.phase !== "white") return;
     if (!reply.move || !isLegal(st.pos, reply.move)) {
       st.phase = "over";
-      st.result = "resigned";
+      st.result = "stalled";
       st.lastReason = "white has no move";
       this.emit();
       return;
