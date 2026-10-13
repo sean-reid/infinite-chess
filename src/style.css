@@ -157,11 +157,33 @@ button {
   background: none;
 }
 
+.tools button,
+.controls button,
+.jumps button {
+  min-width: 44px;
+}
+
 .tools button:hover,
 .controls button:hover,
 .jumps button:hover {
   color: var(--accent);
   border-color: var(--accent);
+}
+
+.controls button:disabled {
+  color: var(--ink-soft);
+  border-color: var(--rule);
+  cursor: default;
+}
+
+.status.over {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.colophon a {
+  display: inline-block;
+  padding: 0.7rem 0;
 }
 
 .game {
