@@ -28,8 +28,6 @@ export interface Stats {
   farthest: number;
 }
 
-const EMPTY: Stats = { games: 0, finished: 0, longest: 0, farthest: 0 };
-
 function readJson<T extends object>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
@@ -57,13 +55,29 @@ function readText(key: string): string {
 }
 
 export const loadGame = async (): Promise<Move[]> => (await decodeMoves(readText(GAME_KEY))) ?? [];
-export const loadStats = (): Stats => readJson<Stats>(STATS_KEY, EMPTY);
+const count = (v: unknown): number =>
+  typeof v === "number" && Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0;
+
+export function loadStats(): Stats {
+  const raw = readJson<Record<string, unknown>>(STATS_KEY, {});
+  return {
+    games: count(raw.games),
+    finished: count(raw.finished),
+    longest: count(raw.longest),
+    farthest: count(raw.farthest),
+  };
+}
 export const saveStats = (s: Stats): void => writeText(STATS_KEY, JSON.stringify(s));
 
 export async function hashMoves(): Promise<Move[] | null> {
   const h = location.hash.replace(/^#/, "");
   const m = /^g=(.*)$/.exec(h);
-  return m ? decodeMoves(decodeURIComponent(m[1] ?? "")) : null;
+  if (!m) return null;
+  try {
+    return await decodeMoves(decodeURIComponent(m[1] ?? ""));
+  } catch {
+    return null;
+  }
 }
 
 let pending = 0;

@@ -71,7 +71,13 @@ layout();
 window.addEventListener("resize", layout);
 renderStatus(status, game.state);
 renderStats(statsEl, game.state);
-void (async () => game.load((await hashMoves()) ?? (await loadGame())))();
+void (async () => {
+  try {
+    game.load((await hashMoves()) ?? (await loadGame()));
+  } catch {
+    game.restart();
+  }
+})();
 
 const share = document.getElementById("share") as HTMLButtonElement;
 share.addEventListener("click", async () => {

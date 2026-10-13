@@ -3,6 +3,7 @@ import type { Square } from "../engine/square.ts";
 import type { GameState } from "./game.ts";
 import { moveText } from "./notation.ts";
 import { formatValue } from "../engine/ordinal.ts";
+import { MAX_COORD } from "./codec.ts";
 
 const DIRECTION: Record<string, string> = {
   "0,1": "up",
@@ -119,6 +120,7 @@ export function renderPrompt(
     const input = document.createElement("input");
     input.type = "number";
     input.min = "1";
+    input.max = String(MAX_COORD);
     input.step = "1";
     input.value = "1";
     input.inputMode = "numeric";
@@ -131,7 +133,7 @@ export function renderPrompt(
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const n = Math.floor(Number(input.value));
-      if (!Number.isFinite(n) || n < 1) return;
+      if (!Number.isFinite(n) || n < 1 || n > MAX_COORD) return;
       onMove(from, ray, n);
     });
     el.append(form);

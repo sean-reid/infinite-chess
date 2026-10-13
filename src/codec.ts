@@ -53,9 +53,19 @@ export function packMoves(moves: Move[]): Uint8Array {
   return varints(values);
 }
 
+// Bounds on what a link may carry: beyond these the board is meaningless and
+// the engine's work per move grows with the numbers.
+export const MAX_COORD = 10_000_000;
+export const MAX_MOVES = 20_000;
+
+const sane = (m: Move): boolean =>
+  [m.from.x, m.from.y, m.to.x, m.to.y].every(
+    (v) => Number.isInteger(v) && Math.abs(v) <= MAX_COORD,
+  );
+
 export function unpackMoves(bytes: Uint8Array): Move[] | null {
   const values = unvarints(bytes);
-  if (values.length % 4 !== 0) return null;
+  if (values.length % 4 !== 0 || values.length / 4 > MAX_MOVES) return null;
   const moves: Move[] = [];
   const prev = [
     { x: 0, y: 0 },
@@ -66,7 +76,9 @@ export function unpackMoves(bytes: Uint8Array): Move[] | null {
     const p = prev[side] as { x: number; y: number };
     const from = { x: p.x + (values[i] as number), y: p.y + (values[i + 1] as number) };
     const to = { x: from.x + (values[i + 2] as number), y: from.y + (values[i + 3] as number) };
-    moves.push({ from, to });
+    const m = { from, to };
+    if (!sane(m)) return null;
+    moves.push(m);
     prev[side] = to;
   }
   return moves;
@@ -134,10 +146,14 @@ export async function decodeMoves(text: string): Promise<Move[] | null> {
 
 function decodeText(text: string): Move[] | null {
   const out: Move[] = [];
-  for (const part of text.split(";")) {
-    const m = /^(-?\d+)\.(-?\d+)-(-?\d+)\.(-?\d+)$/.exec(part);
+  const parts = text.split(";");
+  if (parts.length > MAX_MOVES) return null;
+  for (const part of parts) {
+    const m = /^(-?\d{1,8})\.(-?\d{1,8})-(-?\d{1,8})\.(-?\d{1,8})$/.exec(part);
     if (!m) return null;
-    out.push({ from: { x: +m[1]!, y: +m[2]! }, to: { x: +m[3]!, y: +m[4]! } });
+    const move = { from: { x: +m[1]!, y: +m[2]! }, to: { x: +m[3]!, y: +m[4]! } };
+    if (!sane(move)) return null;
+    out.push(move);
   }
   return out;
 }
