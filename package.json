@@ -2,6 +2,7 @@
   "name": "infinite-chess",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "Play black in the infinite chess position with game value omega to the fourth.",
   "scripts": {

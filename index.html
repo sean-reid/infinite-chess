@@ -51,7 +51,7 @@
         <canvas
           id="board"
           tabindex="0"
-          aria-label="The board. Drag to pan, scroll to zoom."
+          aria-label="The board. Drag to pan, scroll or pinch to zoom, arrow keys pan, plus and minus zoom."
         ></canvas>
       </section>
 
@@ -78,7 +78,7 @@
             <div>
               <dt>g</dt>
               <dd data-term="g"></dd>
-              <dd class="what">threats left in the wing</dd>
+              <dd class="what">forced replies left</dd>
             </div>
           </dl>
           <p class="status" id="status"></p>
@@ -131,13 +131,15 @@
         you get to choose.
       </p>
       <p>
-        Tap a piece to light the squares it can reach. Tap one to move. A ray that never ends asks
-        you for a number instead. Drag the board to pan, scroll or pinch to zoom, and use the links
-        under the value to jump between the throne room, the towers, the cannons and the wings.
+        Tap a piece to light the squares it can reach, then tap one to move. A ray that never ends
+        also offers a number: how far along it to go. Drag the board to pan, scroll or pinch to
+        zoom, and use the Go to buttons for the throne room, the tower, cannon and wing in play, or
+        the last move.
       </p>
       <p>
-        When white must reply to what you just did, the value says so. Those are the moves that cost
-        white nothing on the main line, which is why they are worth making.
+        After white replies, the line under the value says why it moved. Replies that read as
+        answering a gate or shoring up a cannon were forced, and those moves cost you nothing on the
+        main line, which is why they are worth making. The hint names the next one.
       </p>
     </dialog>
 
