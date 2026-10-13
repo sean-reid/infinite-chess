@@ -34,16 +34,109 @@
   </head>
   <body>
     <header class="masthead">
-      <h1 class="wordmark">infinite-chess</h1>
-      <p class="lede">
-        White has a forced win from this position. You play black and decide how long it takes.
-      </p>
+      <div class="title">
+        <h1 class="wordmark">infinite-chess</h1>
+        <p class="lede">
+          White has a forced win from this position. You play black and decide how long it takes.
+        </p>
+      </div>
+      <nav class="tools" aria-label="Site">
+        <button type="button" id="help-button">How to play</button>
+        <button type="button" id="theme-button" aria-pressed="false">Dark</button>
+      </nav>
     </header>
-    <main id="main"></main>
+
+    <main class="game">
+      <section class="stage" aria-label="Board">
+        <canvas
+          id="board"
+          tabindex="0"
+          aria-label="The board. Drag to pan, scroll to zoom."
+        ></canvas>
+      </section>
+
+      <aside class="panel">
+        <section class="value">
+          <h2>Game value</h2>
+          <p class="ordinal" id="ordinal" aria-live="polite">ω<sup>4</sup></p>
+          <dl class="terms" id="terms" hidden>
+            <div>
+              <dt>r</dt>
+              <dd></dd>
+              <dd class="what">towers left</dd>
+            </div>
+            <div>
+              <dt>h</dt>
+              <dd></dd>
+              <dd class="what">white moves in this tower</dd>
+            </div>
+            <div>
+              <dt>b</dt>
+              <dd></dd>
+              <dd class="what">shots left in the cannon</dd>
+            </div>
+            <div>
+              <dt>g</dt>
+              <dd></dd>
+              <dd class="what">threats left in the wing</dd>
+            </div>
+          </dl>
+          <p class="status" id="status"></p>
+        </section>
+
+        <section class="prompt" id="prompt" hidden></section>
+
+        <section class="controls" aria-label="Game">
+          <button type="button" id="new-game">New game</button>
+          <button type="button" id="undo">Undo</button>
+          <button type="button" id="hint" hidden>Hint</button>
+          <button type="button" id="resign">Resign</button>
+        </section>
+
+        <section class="jumps">
+          <h2>Go to</h2>
+          <ul>
+            <li><button type="button" data-jump="throne">Throne room</button></li>
+            <li><button type="button" data-jump="towers">Towers</button></li>
+            <li><button type="button" data-jump="cannons">Cannons</button></li>
+            <li><button type="button" data-jump="wings">Wings</button></li>
+            <li><button type="button" data-jump="last">Last move</button></li>
+          </ul>
+        </section>
+
+        <section class="moves">
+          <h2>Moves</h2>
+          <ol class="movelist" id="movelist"></ol>
+        </section>
+      </aside>
+    </main>
+
     <footer class="colophon">
       <a href="https://github.com/sean-reid/infinite-chess">Source</a>
       <a href="https://arxiv.org/abs/1510.08155">Evans, Hamkins and Perlmutter, 2015</a>
     </footer>
+
+    <dialog id="help" class="sheet" aria-labelledby="help-title">
+      <header class="sheet-head">
+        <h2 id="help-title">How to play</h2>
+        <form method="dialog"><button type="submit">Close</button></form>
+      </header>
+      <p>
+        You are black. White has a forced mate, and the game value says how long you can put it off:
+        ω<sup>4</sup> at the start, counting down to 0 at mate. Every limit you reach is a number
+        you get to choose.
+      </p>
+      <p>
+        Tap a piece to light the squares it can reach. Tap one to move. A ray that never ends asks
+        you for a number instead. Drag the board to pan, scroll or pinch to zoom, and use the links
+        under the value to jump between the throne room, the towers, the cannons and the wings.
+      </p>
+      <p>
+        When white must reply to what you just did, the value says so. Those are the moves that cost
+        white nothing on the main line, which is why they are worth making.
+      </p>
+    </dialog>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
