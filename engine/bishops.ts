@@ -156,10 +156,12 @@ export class Race {
   // Four moves: a first move after which a target is within three.
   approach(from: Square, reach = 40): Path | null {
     if (!this.targets.some((t) => isDark(t) === isDark(from))) return null;
+    const own = segments(this.pos, from, reach).filter((seg) => seg.length > 0);
+    if (!own.length) return null;
     const trial = this.pos.clone();
     trial.set(from, null);
     const inner = new Race(trial, this.color);
-    for (const seg of segments(this.pos, from, reach)) {
+    for (const seg of own) {
       for (let i = 1; i <= seg.length; i++) {
         const s = at(seg, i);
         if (!this.safe(s)) continue;

@@ -3,11 +3,12 @@ import {
   cannonFront,
   cannonOf,
   cannonSquare,
+  gateAt,
   gateSquare,
   towerSquare,
   wingGuard,
 } from "./geometry.ts";
-import { isLegal } from "./moves.ts";
+import { isLegal, pseudoReach } from "./moves.ts";
 import type { Move, Position } from "./position.ts";
 import { sameSquare, type Square } from "./square.ts";
 import { towers } from "./white.ts";
@@ -68,8 +69,26 @@ export function freshGates(pos: Position, w: number): number[] {
   return out;
 }
 
-export function wingUntouched(pos: Position, w: number): boolean {
-  return freshGates(pos, w).length === w;
+// Wings any moved piece has touched, read off the overlay once.
+export function touchedWings(pos: Position): Set<number> {
+  const out = new Set<number>();
+  const probes: [number, number][] = [
+    [0, -5],
+    [1, -4],
+    [2, -3],
+    [2, -4],
+    [0, 0],
+    [1, -1],
+    [0, -2],
+  ];
+  for (const k of pos.overlay.keys()) {
+    const [x, y] = k.split(",").map(Number) as [number, number];
+    for (const [dx, dy] of probes) {
+      const g = gateAt({ x, y }, dx, dy);
+      if (g) out.add(g.n);
+    }
+  }
+  return out;
 }
 
 // The next pawn step after shooter k of cannon n fired, if its threat is still live.
@@ -87,19 +106,24 @@ function pawnThreat(pos: Position, n: number, k: number): Move | null {
   return null;
 }
 
-function fireTo(pos: Position, from: Square, w: number): Move | null {
-  const i = (from.x + from.y - hallwaySum(w)) / 2;
-  if (!Number.isInteger(i) || i < 1) return null;
-  const m = { from, to: step(from, -i, -i) };
-  return isLegal(pos, m) ? m : null;
-}
-
-// Fires `from` at the smallest untouched wing it can reach.
-function fireAtFreshWing(pos: Position, from: Square, maxWing = 400): Move | null {
+// Fires `from` down its exit diagonal at the smallest untouched wing it can
+// reach. One ray walk decides how far the bishop can go at all.
+function fireAtFreshWing(
+  pos: Position,
+  from: Square,
+  touched: Set<number>,
+  maxWing = 400,
+): Move | null {
+  const reach = pseudoReach(pos, from);
+  const ray = reach?.rays.find((r) => r.dir.dx === -1 && r.dir.dy === -1);
+  if (!ray || ray.length < 1) return null;
   for (let w = 1; w <= maxWing; w++) {
-    if (!wingUntouched(pos, w)) continue;
-    const m = fireTo(pos, from, w);
-    if (m) return m;
+    if (touched.has(w)) continue;
+    const i = (from.x + from.y - hallwaySum(w)) / 2;
+    if (!Number.isInteger(i) || i < 1) continue;
+    if (i > ray.length) return null;
+    const m = { from, to: step(from, -i, -i) };
+    if (isLegal(pos, m)) return m;
   }
   return null;
 }
@@ -156,10 +180,11 @@ export function mainLine(pos: Position): Hint {
         }
       }
     }
+    const touched = touchedWings(pos);
     for (let k = 1; k <= shot.n; k++) {
       const from = cannonSquare(shot.n, k, k);
       if (pos.atSquare(from) !== "b") continue;
-      const m = fireAtFreshWing(pos, from);
+      const m = fireAtFreshWing(pos, from, touched);
       if (m) {
         return {
           move: m,
@@ -169,10 +194,11 @@ export function mainLine(pos: Position): Hint {
       }
     }
   }
+  const touched = touchedWings(pos);
   for (let n = 1; n <= 400; n++) {
     const front = cannonFront(n);
     if (pos.atSquare(front) !== "b") continue;
-    const m = fireAtFreshWing(pos, front);
+    const m = fireAtFreshWing(pos, front, touched);
     if (m) {
       return {
         move: m,

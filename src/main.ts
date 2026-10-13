@@ -22,8 +22,18 @@ const hintText = document.getElementById("hint-text") as HTMLElement;
 const statsEl = document.getElementById("stats") as HTMLElement;
 
 let seenMoves = 0;
+let frame = 0;
 
+// Several events per frame ask for a paint; one happens.
 function paint(): void {
+  if (frame) return;
+  frame = requestAnimationFrame(() => {
+    frame = 0;
+    paintNow();
+  });
+}
+
+function paintNow(): void {
   const st = game.state;
   canvas.dataset.cx = String(board.view.cx);
   canvas.dataset.cy = String(board.view.cy);
