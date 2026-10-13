@@ -103,3 +103,25 @@ describe("moves", () => {
     expect(reach?.rays).toEqual([]);
   });
 });
+
+describe("check from far away", () => {
+  it("decides mate from a checker a hundred thousand squares out without walking the line", () => {
+    const pos = new Position();
+    const d = 100_000;
+    pos.set(sq(32 - d, 57 + d), "B");
+    const started = performance.now();
+    expect(outcome(pos)).toBe("checkmate");
+    expect(performance.now() - started).toBeLessThan(1000);
+  });
+
+  it("still finds a moved rook that can interpose far up the line", () => {
+    const pos = new Position();
+    const d = 100_000;
+    pos.set(sq(32 - d, 57 + d), "B");
+    pos.set(sq(-5, 57 + 50_000), "r");
+    expect(outcome(pos)).toBe("check");
+    const reach = legalReach(pos, sq(-5, 57 + 50_000));
+    expect(reach?.steps).toContainEqual(sq(32 - 50_000, 57 + 50_000));
+    expect(reach?.steps).toContainEqual(sq(-5, 57 + 37));
+  });
+});

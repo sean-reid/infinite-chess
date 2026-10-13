@@ -183,12 +183,22 @@ export function legalReach(pos: Position, from: Square): Reach | null {
       rays.push(r);
       continue;
     }
-    const limit = r.length === Infinity ? checkSpan(pos, color) : r.length;
     let length = 0;
     const legalSquares: Square[] = [];
-    for (let n = 1; n <= limit; n++) {
-      const to = step(from, r.dir, n);
-      if (isLegal(pos, { from, to })) legalSquares.push(to);
+    if (r.length <= NEAR) {
+      for (let n = 1; n <= r.length; n++) {
+        const to = step(from, r.dir, n);
+        if (isLegal(pos, { from, to })) legalSquares.push(to);
+      }
+    } else if (checked) {
+      // A long ray under check can only help where it meets the check line.
+      const seg = checkSegment(pos, color);
+      if (seg) {
+        for (const n of segmentHits(from, r.dir, king, seg, 1)) {
+          const to = step(king, seg.dir, n);
+          if (isLegal(pos, { from, to })) legalSquares.push(to);
+        }
+      }
     }
     // Legal squares on a ray under check or pin form one contiguous stretch
     // only when they start at the piece; otherwise expose them as steps.
@@ -224,38 +234,98 @@ function pinDirection(pos: Position, from: Square, king: Square): Dir | null {
   return kinds.includes(kindOf(c)) ? dir : null;
 }
 
-// Under check, a slider can only help within this many squares: the farthest
-// an interposition or capture can be from it is bounded by the check line.
-function checkSpan(pos: Position, color: Color): number {
+// Squares the check-reply scan walks one by one; beyond them only a moved
+// piece can reach the line, and those are enumerated instead.
+const NEAR = 64;
+
+interface Segment {
+  dir: Dir;
+  // Squares strictly between the king and the checker.
+  length: number;
+  checker: Square;
+}
+
+function checkSegment(pos: Position, color: Color): Segment | null {
   const king = pos.kings[color];
-  let span = 0;
-  for (const a of attackersOf(pos, king, color === "w" ? "b" : "w")) {
-    span = Math.max(span, Math.abs(a.x - king.x), Math.abs(a.y - king.y));
+  const checkers = attackersOf(pos, king, color === "w" ? "b" : "w");
+  if (checkers.length !== 1) return null;
+  const checker = checkers[0] as Square;
+  const dir: Dir = { dx: Math.sign(checker.x - king.x), dy: Math.sign(checker.y - king.y) };
+  return {
+    dir,
+    length: Math.max(Math.abs(checker.x - king.x), Math.abs(checker.y - king.y)) - 1,
+    checker,
+  };
+}
+
+// Steps n along the check line, counted from the king, where a ray from `from`
+// in direction `d` lands on it, with n at least `minN`.
+function segmentHits(from: Square, d: Dir, king: Square, seg: Segment, minN: number): number[] {
+  const D = seg.dir;
+  const det = d.dx * -D.dy - d.dy * -D.dx;
+  const rx = king.x - from.x;
+  const ry = king.y - from.y;
+  const out: number[] = [];
+  if (det !== 0) {
+    const i = (rx * -D.dy - ry * -D.dx) / det;
+    const n = (d.dx * ry - d.dy * rx) / det;
+    if (Number.isInteger(i) && Number.isInteger(n) && i >= 1 && n >= minN && n <= seg.length)
+      out.push(n);
+    return out;
   }
-  return span + 1;
+  // Parallel: only a ray along the line itself can reach it.
+  const onLine = (from.x - king.x) * D.dy === (from.y - king.y) * D.dx;
+  if (!onLine) return out;
+  const at = D.dx !== 0 ? (from.x - king.x) / D.dx : (from.y - king.y) / D.dy;
+  const towards = d.dx === D.dx && d.dy === D.dy ? 1 : -1;
+  const n = at + towards;
+  if (Number.isInteger(n) && n >= minN && n <= seg.length) out.push(n);
+  return out;
 }
 
 // Whether `color`, in check, has any legal reply. Not meaningful when not in
 // check: this position never stalemates, both sides always have free pieces.
 export function hasReplyToCheck(pos: Position, color: Color): boolean {
   const king = pos.kings[color];
-  const enemy = color === "w" ? "b" : "w";
   for (const d of ALL_DIRS) {
     if (isLegal(pos, { from: king, to: step(king, d) })) return true;
   }
-  const checkers = attackersOf(pos, king, enemy);
-  if (checkers.length !== 1) return false;
-  const checker = checkers[0] as Square;
-  for (const from of attackersOf(pos, checker, color)) {
-    if (isLegal(pos, { from, to: checker })) return true;
+  const seg = checkSegment(pos, color);
+  if (!seg) return false;
+  for (const from of attackersOf(pos, seg.checker, color)) {
+    if (isLegal(pos, { from, to: seg.checker })) return true;
   }
-  const dir: Dir = { dx: Math.sign(checker.x - king.x), dy: Math.sign(checker.y - king.y) };
-  const dist = Math.max(Math.abs(checker.x - king.x), Math.abs(checker.y - king.y));
-  for (let n = 1; n < dist; n++) {
-    const sq = step(king, dir, n);
-    if (coverable(pos, sq, color)) return true;
+  for (let n = 1; n <= Math.min(seg.length, NEAR); n++) {
+    if (coverable(pos, step(king, seg.dir, n), color)) return true;
+  }
+  if (seg.length <= NEAR) return false;
+  for (const [from, c] of pos.movedPieces()) {
+    if (colorOf(c) !== color || kindOf(c) === "K") continue;
+    for (const n of farHits(from, c, king, seg)) {
+      if (isLegal(pos, { from, to: step(king, seg.dir, n) })) return true;
+    }
   }
   return false;
+}
+
+// Where a moved piece could land on the far part of the check line.
+function farHits(from: Square, code: Code, king: Square, seg: Segment): number[] {
+  const kind = kindOf(code);
+  const dirs = kind === "B" ? DIAGONAL : kind === "R" ? ORTHOGONAL : kind === "Q" ? ALL_DIRS : [];
+  const out: number[] = [];
+  for (const d of dirs) out.push(...segmentHits(from, d, king, seg, NEAR + 1));
+  const single =
+    kind === "N"
+      ? KNIGHT_JUMPS.map((d) => step(from, d))
+      : kind === "P"
+        ? [step(from, { dx: 0, dy: forward(colorOf(code)) })]
+        : [];
+  for (const s of single) {
+    const n = seg.dir.dx !== 0 ? (s.x - king.x) / seg.dir.dx : (s.y - king.y) / seg.dir.dy;
+    if (Number.isInteger(n) && n > NEAR && n <= seg.length && sameSquare(step(king, seg.dir, n), s))
+      out.push(n);
+  }
+  return out;
 }
 
 // Can a non-king piece of `color` legally move onto the empty square `sq`?
