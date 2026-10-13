@@ -14,4 +14,4 @@ npm run test:e2e   # Playwright against a local wrangler dev
 
 ## How it runs
 
-One Cloudflare Worker serves the page from the asset store and answers `/api/health`. Everything else runs in the browser.
+One Cloudflare Worker serves the page from the asset store and answers `/api/health`. Everything else runs in the browser: `engine/base.ts` generates the position for any square, `engine/moves.ts` knows the rules, and `engine/white.ts` plays white's strategy from the paper inside a Web Worker that replays the game from the start on every move. The board is a canvas; drag to pan, scroll or pinch to zoom, tap a piece and then a square to move, or type a distance for a ray that never ends.

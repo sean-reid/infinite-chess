@@ -4,7 +4,7 @@ test("the page loads with the masthead", async ({ page }, info) => {
   await page.goto("/");
   await expect(page).toHaveTitle("infinite-chess");
   await expect(page.locator(".wordmark")).toHaveText("infinite-chess");
-  await expect(page.locator(".notice")).toContainText("(32, 57)");
+  await expect(page.locator("#ordinal")).toContainText("ω");
   await page.screenshot({ path: info.outputPath("front.png"), fullPage: true });
 });
 

@@ -58,40 +58,38 @@
       <aside class="panel">
         <section class="value">
           <h2>Game value</h2>
-          <p class="ordinal" id="ordinal" aria-live="polite">
-            ω<sup>3</sup>·1 + ω<sup>2</sup>·14 + ω·2 + 7
-          </p>
-          <dl class="terms" id="terms">
+          <p class="ordinal" id="ordinal" aria-live="polite">ω<sup>4</sup></p>
+          <dl class="terms" id="terms" hidden>
             <div>
               <dt>r</dt>
-              <dd>1</dd>
+              <dd></dd>
               <dd class="what">towers left</dd>
             </div>
             <div>
               <dt>h</dt>
-              <dd>14</dd>
+              <dd></dd>
               <dd class="what">white moves in this tower</dd>
             </div>
             <div>
               <dt>b</dt>
-              <dd>2</dd>
+              <dd></dd>
               <dd class="what">shots left in the cannon</dd>
             </div>
             <div>
               <dt>g</dt>
-              <dd>7</dd>
+              <dd></dd>
               <dd class="what">threats left in the wing</dd>
             </div>
           </dl>
-          <p class="status" id="status">
-            <span class="flag">White must reply</span> · move 41 · black to play
-          </p>
+          <p class="status" id="status"></p>
         </section>
+
+        <section class="prompt" id="prompt" hidden></section>
 
         <section class="controls" aria-label="Game">
           <button type="button" id="new-game">New game</button>
           <button type="button" id="undo">Undo</button>
-          <button type="button" id="hint">Hint</button>
+          <button type="button" id="hint" hidden>Hint</button>
           <button type="button" id="resign">Resign</button>
         </section>
 
@@ -99,32 +97,16 @@
           <h2>Go to</h2>
           <ul>
             <li><button type="button" data-jump="throne">Throne room</button></li>
-            <li><button type="button" data-jump="tower">Active tower</button></li>
-            <li><button type="button" data-jump="cannon">Active cannon</button></li>
-            <li><button type="button" data-jump="wing">Active wing</button></li>
+            <li><button type="button" data-jump="towers">Towers</button></li>
+            <li><button type="button" data-jump="cannons">Cannons</button></li>
+            <li><button type="button" data-jump="wings">Wings</button></li>
             <li><button type="button" data-jump="last">Last move</button></li>
           </ul>
         </section>
 
         <section class="moves">
           <h2>Moves</h2>
-          <ol class="movelist" id="movelist">
-            <li>
-              <span class="b">b (46,45) → (48,47)</span><span class="w">P (49,46) × (48,47)</span>
-            </li>
-            <li>
-              <span class="b">b (52,32) → (42,22)</span><span class="w">P (48,47) → (48,48)</span>
-            </li>
-            <li>
-              <span class="b">b (42,22) → (33,31)</span><span class="w">B (33,36) → (34,35)</span>
-            </li>
-            <li>
-              <span class="b">b (33,31) × (35,33)</span><span class="w">B (34,35) → (33,34)</span>
-            </li>
-            <li>
-              <span class="b">b (53,33) → (34,14)</span><span class="w">P (55,27) → (55,28)</span>
-            </li>
-          </ol>
+          <ol class="movelist" id="movelist"></ol>
         </section>
       </aside>
     </main>
