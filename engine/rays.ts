@@ -88,7 +88,21 @@ function periodicTower(x: number, y: number, d: Dir): boolean {
   return false;
 }
 
-const MAX_SCAN = 100_000;
+// Squares a ray is walked one by one before it is reported finite at the
+// length reached, so nothing is ever assumed about what lies beyond. Jumps
+// over known-empty stretches do not count.
+export const MAX_SCAN = 100_000;
+
+// Going down a rook file or down and left along the band above the strip, the
+// base is empty until the strip's top row; jump there instead of walking.
+function towerDrop(x: number, y: number, d: Dir): number {
+  if (x < 43 || y < 38 || y - x < -8) return 0;
+  const k = Math.floor((x - 43) / 3);
+  const top = 68 + 3 * k;
+  if (y <= top + 1) return 0;
+  if (d.dx === 0 && d.dy === -1 && x - 3 * k === 44) return y - top - 1;
+  return 0;
+}
 
 // Walks from `from` in direction `d` until a piece. `length` is Infinity when
 // the ray never meets one.
@@ -96,13 +110,24 @@ export function rayEnd(pos: Position, from: Square, d: Dir): RayEnd {
   let x = from.x;
   let y = from.y;
   let length = 0;
+  let walked = 0;
   let periodicRun = 0;
   for (;;) {
     x += d.dx;
     y += d.dy;
     if (pos.at(x, y)) return { length, blocker: { x, y } };
     length++;
-    if (length > MAX_SCAN) return { length: Infinity, blocker: null };
+    if (++walked > MAX_SCAN) return { length, blocker: null };
+    const drop = towerDrop(x, y, d);
+    if (drop > 0) {
+      const ahead = nearestOverlayAhead(pos, x, y, d);
+      const limit = ahead ? Math.max(Math.abs(ahead.x - x), Math.abs(ahead.y - y)) - 1 : drop;
+      const steps = Math.min(drop, limit);
+      x += d.dx * steps;
+      y += d.dy * steps;
+      length += steps;
+      continue;
+    }
     periodicRun = periodicTower(x, y, d) ? periodicRun + 1 : 0;
     if (periodicRun >= 3 || unreachable(x, y, d)) {
       const ahead = nearestOverlayAhead(pos, x, y, d);
