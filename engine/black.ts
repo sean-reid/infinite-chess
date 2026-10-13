@@ -1,20 +1,14 @@
-import {
-  KEY_BISHOP,
-  cannonFront,
-  cannonSquare,
-  channelSquare,
-  gateSquare,
-  towerSquare,
-} from "./geometry.ts";
+import { KEY_BISHOP, cannonFront, cannonOf, channelSquare, towerSquare } from "./geometry.ts";
+import { attackedRook, mainLine } from "./mainline.ts";
 import { hasReplyToCheck, inCheck, isLegal, legalReach } from "./moves.ts";
 import type { Move, Position } from "./position.ts";
 import { ALL_DIRS } from "./rays.ts";
-import type { Square } from "./square.ts";
+import { sameSquare, type Square } from "./square.ts";
 
 // A black that follows the paper's main line with small announcements: the
 // key bishop out `t` squares, every attacked rook up `height`, then cannons
-// fired in order with their pawn threats and the gateway walks. Used to test
-// white; the real black is the player.
+// in order up to `cannons`, after which it shuffles a spare bishop. Used to
+// test white; the real black is the player.
 export interface BlackPlan {
   t: number;
   height: number;
@@ -24,10 +18,6 @@ export interface BlackPlan {
 const step = (s: Square, dx: number, dy: number): Square => ({ x: s.x + dx, y: s.y + dy });
 
 export class ScriptedBlack {
-  private queue: Move[] = [];
-  private cannon = 1;
-  private shooter = 0;
-  private wing = 1;
   private idle: [Square, Square] | null = null;
   private readonly plan: BlackPlan;
 
@@ -42,17 +32,19 @@ export class ScriptedBlack {
       const m = { from: KEY_BISHOP, to: channelSquare(this.plan.t) };
       if (isLegal(pos, m)) return m;
     }
-    const rook = this.attackedRook(pos);
-    if (rook) return rook;
-    for (let guard = 0; guard < 200; guard++) {
-      const next = this.queue.shift();
-      if (!next) {
-        this.refill(pos);
-        continue;
-      }
-      if (isLegal(pos, next)) return next;
+    const rook = attackedRook(pos);
+    if (rook !== null) {
+      const from = towerSquare(rook, 0, 0);
+      const up = { from, to: step(from, 0, this.plan.height) };
+      if (isLegal(pos, up)) return up;
     }
-    throw new Error("scripted black found no legal move in its plan");
+    const hint = mainLine(pos);
+    if (hint.move && isLegal(pos, hint.move)) {
+      const c = cannonOf(hint.move.from);
+      const isRook = rook !== null && sameSquare(hint.move.from, towerSquare(rook, 0, 0));
+      if (!isRook && (!c || c.n <= this.plan.cannons)) return hint.move;
+    }
+    return this.idleMove(pos);
   }
 
   private escape(pos: Position): Move | null {
@@ -71,64 +63,16 @@ export class ScriptedBlack {
     return null;
   }
 
-  private attackedRook(pos: Position): Move | null {
-    for (let m = 0; m < 400; m++) {
-      const home = towerSquare(m, 0, 0);
-      if (pos.atSquare(home) !== "r") continue;
-      const guard = towerSquare(m, 1, -1);
-      if (pos.atSquare(guard) !== "P") continue;
-      const up = { from: home, to: towerSquare(m, 0, this.plan.height) };
-      if (isLegal(pos, up)) return up;
-    }
-    return null;
-  }
-
-  // The next stretch of the main line: fire a bishop at a fresh wing, walk
-  // its pawn threats, then the gateway's attack squares and door.
-  private refill(pos: Position): void {
-    if (this.cannon > this.plan.cannons) {
-      this.refillIdle(pos);
-      return;
-    }
-    const n = this.cannon;
-    const k = this.shooter;
-    const w = this.wing;
-    const from = cannonSquare(n, k, k);
-    const hallway = 80 - 16 * w;
-    const i = (from.x + from.y - hallway) / 2;
-    const landing = step(from, -i, -i);
-    this.queue.push({ from, to: landing });
-    if (k >= 1) {
-      const pawn = cannonSquare(n, k, k + 1);
-      this.queue.push({ from: pawn, to: step(pawn, 0, -1) });
-      this.queue.push({ from: step(pawn, 0, -1), to: step(pawn, 0, -2) });
-      this.queue.push({ from: step(pawn, 0, -2), to: cannonSquare(n, k + 1, k - 2) });
-    }
-    let at = landing;
-    for (let g = 0; g < w; g++) {
-      const attack = gateSquare(w, g, 0, -5);
-      this.queue.push({ from: at, to: attack });
-      at = attack;
-    }
-    this.queue.push({ from: at, to: gateSquare(w, w - 1, 2, -3) });
-    this.wing++;
-    this.shooter++;
-    if (this.shooter > n) {
-      this.shooter = 0;
-      this.cannon++;
-    }
-  }
-
-  private refillIdle(pos: Position): void {
+  private idleMove(pos: Position): Move | null {
     if (!this.idle) {
-      const n = this.plan.cannons + 1;
-      const front = cannonFront(n);
+      const front = cannonFront(this.plan.cannons + 1);
       const out = step(front, -6, -6);
-      this.queue.push({ from: front, to: out });
       this.idle = [out, step(out, -1, -1)];
-      return;
+      const m = { from: front, to: out };
+      if (isLegal(pos, m)) return m;
     }
     const [a, b] = this.idle;
-    this.queue.push(pos.atSquare(a) === "b" ? { from: a, to: b } : { from: b, to: a });
+    const m = pos.atSquare(a) === "b" ? { from: a, to: b } : { from: b, to: a };
+    return isLegal(pos, m) ? m : null;
   }
 }

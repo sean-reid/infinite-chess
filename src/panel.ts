@@ -2,6 +2,7 @@ import type { Ray } from "../engine/moves.ts";
 import type { Square } from "../engine/square.ts";
 import type { GameState } from "./game.ts";
 import { moveText } from "./notation.ts";
+import { formatValue } from "../engine/ordinal.ts";
 
 const DIRECTION: Record<string, string> = {
   "0,1": "up",
@@ -14,10 +15,29 @@ const DIRECTION: Record<string, string> = {
   "-1,-1": "down and left",
 };
 
-export interface PanelElements {
-  movelist: HTMLOListElement;
-  status: HTMLElement;
-  prompt: HTMLElement;
+export function renderValue(ordinal: HTMLElement, terms: HTMLElement, state: GameState): void {
+  const v = state.value;
+  if (!v) return;
+  ordinal.innerHTML = formatValue(v);
+  terms.hidden = v.r === null || v.mateIn !== null;
+  const show = (name: string, n: number | "open" | null) => {
+    const dd = terms.querySelector<HTMLElement>(`[data-term="${name}"]`);
+    if (dd) dd.textContent = n === null ? "" : n === "open" ? "ω" : String(n);
+  };
+  show("r", v.r);
+  show("h", v.h);
+  show("b", v.b);
+  show("g", v.g);
+}
+
+export function renderHint(el: HTMLElement, state: GameState): void {
+  if (!state.hint) {
+    el.hidden = true;
+    el.textContent = "";
+    return;
+  }
+  el.hidden = false;
+  el.textContent = state.hint.text;
 }
 
 export function renderMoves(el: HTMLOListElement, state: GameState): void {
@@ -63,8 +83,13 @@ export function renderPrompt(
   if (!state.selected || !open.length) {
     el.hidden = true;
     el.innerHTML = "";
+    delete el.dataset.for;
     return;
   }
+  // The same selection keeps its form, so a number being typed survives a redraw.
+  const key = `${state.selected.x},${state.selected.y}`;
+  if (el.dataset.for === key && !el.hidden) return;
+  el.dataset.for = key;
   el.hidden = false;
   el.innerHTML = "";
   const from = state.selected;

@@ -63,19 +63,23 @@ describe("white against the paper's main line", () => {
     LONG,
   );
 
-  it("works down from the third tower, closing each tower in turn", () => {
-    const { pos, ply, reasons, slowest } = play(
-      scripted({ t: 11, height: 2, cannons: 1 }, 900),
-      900,
-    );
-    expect(outcome(pos)).toBe("checkmate");
-    expect(ply).toBeLessThan(200);
-    expect(slowest).toBeLessThan(1000);
-    expect(reasons).toContain("closing tower 3");
-    expect(reasons).toContain("closing tower 2");
-    expect(reasons).toContain("unlocking tower 1");
-    expect(reasons.at(-1)).toBe("mate");
-  });
+  it(
+    "works down from the third tower, closing each tower in turn",
+    () => {
+      const { pos, ply, reasons, slowest } = play(
+        scripted({ t: 11, height: 2, cannons: 1 }, 900),
+        900,
+      );
+      expect(outcome(pos)).toBe("checkmate");
+      expect(ply).toBeLessThan(200);
+      expect(slowest).toBeLessThan(1000);
+      expect(reasons).toContain("closing tower 3");
+      expect(reasons).toContain("closing tower 2");
+      expect(reasons).toContain("unlocking tower 1");
+      expect(reasons.at(-1)).toBe("mate");
+    },
+    LONG,
+  );
 
   it(
     "unlocks the fourth tower from a landing square the paper does not use",

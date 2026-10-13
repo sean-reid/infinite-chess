@@ -283,6 +283,12 @@ button {
   padding: 0 0.75rem;
 }
 
+.hint-text {
+  margin: 0.75rem 0 0;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--accent);
+}
+
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -301,7 +307,7 @@ button {
 
 .movelist {
   font-family: var(--mono);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   margin: 0;
   padding: 0 0 0 2.25rem;
   max-height: 14rem;
@@ -364,7 +370,7 @@ button {
 
 @media (min-width: 1024px) {
   .game {
-    grid-template-columns: 1fr 22rem;
+    grid-template-columns: 1fr 24rem;
     padding: 0 1rem;
   }
 

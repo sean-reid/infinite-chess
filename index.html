@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>infinite-chess</title>
+    <title>infinite chess</title>
     <meta
       name="description"
       content="Play black in the infinite chess position with game value omega to the fourth."
@@ -35,7 +35,7 @@
   <body>
     <header class="masthead">
       <div class="title">
-        <h1 class="wordmark">infinite-chess</h1>
+        <h1 class="wordmark">infinite chess</h1>
         <p class="lede">
           White has a forced win from this position. You play black and decide how long it takes.
         </p>
@@ -62,22 +62,22 @@
           <dl class="terms" id="terms" hidden>
             <div>
               <dt>r</dt>
-              <dd></dd>
+              <dd data-term="r"></dd>
               <dd class="what">towers left</dd>
             </div>
             <div>
               <dt>h</dt>
-              <dd></dd>
+              <dd data-term="h"></dd>
               <dd class="what">white moves in this tower</dd>
             </div>
             <div>
               <dt>b</dt>
-              <dd></dd>
+              <dd data-term="b"></dd>
               <dd class="what">shots left in the cannon</dd>
             </div>
             <div>
               <dt>g</dt>
-              <dd></dd>
+              <dd data-term="g"></dd>
               <dd class="what">threats left in the wing</dd>
             </div>
           </dl>
@@ -86,10 +86,12 @@
 
         <section class="prompt" id="prompt" hidden></section>
 
+        <p class="hint-text" id="hint-text" hidden></p>
+
         <section class="controls" aria-label="Game">
           <button type="button" id="new-game">New game</button>
           <button type="button" id="undo">Undo</button>
-          <button type="button" id="hint" hidden>Hint</button>
+          <button type="button" id="hint">Hint</button>
           <button type="button" id="resign">Resign</button>
         </section>
 

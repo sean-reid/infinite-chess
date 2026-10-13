@@ -1,7 +1,7 @@
 import { Board } from "./board.ts";
 import { Game } from "./game.ts";
 import { attachInput } from "./input.ts";
-import { renderMoves, renderPrompt, renderStatus } from "./panel.ts";
+import { renderHint, renderMoves, renderPrompt, renderStatus, renderValue } from "./panel.ts";
 import { NARROW_BELOW, NARROW_VIEW, WIDE_VIEW } from "./views.ts";
 import { KEY_BISHOP, BLACK_KING } from "../engine/geometry.ts";
 import { inCheck } from "../engine/moves.ts";
@@ -14,6 +14,9 @@ const game = new Game();
 const movelist = document.getElementById("movelist") as HTMLOListElement;
 const status = document.getElementById("status") as HTMLElement;
 const prompt = document.getElementById("prompt") as HTMLElement;
+const ordinal = document.getElementById("ordinal") as HTMLElement;
+const terms = document.getElementById("terms") as HTMLElement;
+const hintText = document.getElementById("hint-text") as HTMLElement;
 
 function paint(): void {
   const st = game.state;
@@ -36,6 +39,8 @@ function layout(): void {
 game.onChange((st) => {
   renderMoves(movelist, st);
   renderStatus(status, st);
+  renderValue(ordinal, terms, st);
+  renderHint(hintText, st);
   renderPrompt(prompt, st, (from, ray, n) => {
     game.playBlack({ from, to: { x: from.x + ray.dir.dx * n, y: from.y + ray.dir.dy * n } });
   });
@@ -62,15 +67,23 @@ const jumps: Record<string, { x: number; y: number }> = {
 for (const button of document.querySelectorAll<HTMLButtonElement>("[data-jump]")) {
   button.addEventListener("click", () => {
     const key = button.dataset.jump ?? "";
-    if (key === "last") {
-      const last = game.state.pos.history.at(-1);
-      board.centreOn(last ? last.to : BLACK_KING);
-    } else {
-      board.centreOn(jumps[key] ?? BLACK_KING);
-    }
+    const { focus, pos } = game.state;
+    const live =
+      key === "last"
+        ? (pos.history.at(-1)?.to ?? null)
+        : key === "towers"
+          ? focus.tower
+          : key === "cannons"
+            ? focus.cannon
+            : key === "wings"
+              ? focus.wing
+              : null;
+    board.centreOn(live ?? jumps[key] ?? BLACK_KING);
     paint();
   });
 }
+
+document.getElementById("hint")?.addEventListener("click", () => game.askHint());
 
 document.getElementById("new-game")?.addEventListener("click", () => game.restart());
 document.getElementById("undo")?.addEventListener("click", () => game.undo());
