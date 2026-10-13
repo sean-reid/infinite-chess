@@ -44,9 +44,11 @@ export function towers(pos: Position): Towers {
       const t = channelStep(p.to);
       if (t !== null) first = climbPlan(t).tower;
     }
-    if (p.captured === "r" && (p.to.x - 44) % 3 === 0) {
-      const m = (p.to.x - 44) / 3;
-      taken.set(m, p.to.y - (54 + 3 * m));
+    // A rook dies on its own file or, having taken a wall pawn, one file over.
+    if (p.captured === "r") {
+      const m = Math.round((p.to.x - 44) / 3);
+      if (m >= 0 && Math.abs(p.to.x - (44 + 3 * m)) <= 1)
+        taken.set(m, Math.max(0, p.to.y - (54 + 3 * m)));
     }
   }
   return { first, taken };
@@ -191,11 +193,14 @@ function captureLastMover(pos: Position, tw: Towers): Move | null {
   if (!last || colorOf(last.piece) !== "b") return null;
   if (last.piece === "r" && !rookWorthTaking(pos, last, tw)) return null;
   const attackers = attackersOf(pos, last.to, "w").filter((a) => pos.atSquare(a) !== "K");
-  attackers.sort(
-    (a, b) =>
-      CAPTURE_ORDER.indexOf(pos.atSquare(a) as string) -
-      CAPTURE_ORDER.indexOf(pos.atSquare(b) as string),
-  );
+  // A rook that took a wall pawn is retaken by the bishop under its old square
+  // when that bishop can reach it: leaving (0, -1) is what opens the next tower.
+  const m = Math.round((last.to.x - 44) / 3);
+  const under = towerSquare(m, 0, -1);
+  const rank = (a: Square) =>
+    (last.piece === "r" && sameSquare(a, under) ? -1 : 0) * 10 +
+    CAPTURE_ORDER.indexOf(pos.atSquare(a) as string);
+  attackers.sort((a, b) => rank(a) - rank(b));
   for (const from of attackers) {
     const m = legal(pos, from, last.to);
     if (m) return m;
@@ -239,6 +244,19 @@ const ZIGZAG: [number, number][] = [
   [3, -2],
   [2, -3],
 ];
+
+// A rook taken on its own square leaves no hole in the left column. The pawn
+// below the vacated guard square steps up and the bishop under the rook slides
+// into its place, which hands the next tower a hole to shuffle into.
+function openTakenTower(pos: Position, m: number): Move | null {
+  const guard = towerSquare(m, 1, -1);
+  const below = towerSquare(m, 1, -2);
+  const under = towerSquare(m, 0, -1);
+  if (!pos.atSquare(guard) && pos.atSquare(below) === "P") return legal(pos, below, guard);
+  if (pos.atSquare(guard) === "P" && !pos.atSquare(below) && pos.atSquare(under) === "B")
+    return legal(pos, under, below);
+  return null;
+}
 
 function keyPawnMove(pos: Position, m: number): Move | null {
   const k = towerSquare(m, 2, -4);
@@ -329,6 +347,8 @@ export function towerMove(pos: Position, tw: Towers): Choice | null {
   if (answer) return { move: answer, reason: `taking the rook of tower ${m}` };
   const j = tw.taken.get(m);
   if (j !== undefined) {
+    const stuck = openTakenTower(pos, m);
+    if (stuck) return { move: stuck, reason: `opening tower ${m} from the right` };
     const h = holeHeight(pos, m, j);
     if (h !== null && h >= 1) {
       const mv = legal(pos, towerSquare(m, -1, h - 1), towerSquare(m, -1, h));
@@ -340,6 +360,8 @@ export function towerMove(pos: Position, tw: Towers): Choice | null {
     }
     return null;
   }
+  const above = tw.taken.has(m + 1) ? openTakenTower(pos, m + 1) : null;
+  if (above) return { move: above, reason: `opening tower ${m + 1} from the right` };
   const unlock = m === tw.first ? firstUnlock(pos, m) : (shuffleUp(pos, m) ?? keyPawnMove(pos, m));
   if (unlock) return { move: unlock, reason: `unlocking tower ${m}` };
   return null;
