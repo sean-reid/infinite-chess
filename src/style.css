@@ -146,6 +146,31 @@ button {
   flex: none;
 }
 
+@media (max-width: 767px) {
+  .masthead {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 0 1rem;
+  }
+
+  .title {
+    display: contents;
+  }
+
+  .wordmark {
+    grid-area: 1 / 1;
+  }
+
+  .tools {
+    grid-area: 1 / 2;
+  }
+
+  .lede {
+    grid-area: 2 / 1 / 2 / -1;
+  }
+}
+
 .tools button,
 .controls button,
 .jumps button,
