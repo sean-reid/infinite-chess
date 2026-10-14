@@ -111,6 +111,13 @@ test("the game value and the hint follow the position", async ({ page }, info) =
   await page.screenshot({ path: info.outputPath("value-and-hint.png") });
   await hinted.click();
   await expect(page.locator("#movelist li").nth(1)).toContainText("b", { timeout: 15_000 });
+  await expect(page.locator("#status")).toContainText("black to play", { timeout: 15_000 });
+  await page.getByRole("button", { name: "Hint" }).click();
+  await expect(page.locator("#hint-text")).toContainText("Attack gate");
+  await expect(page.locator("#prompt .open-ray")).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath("hint-square.png") });
+  await page.locator("#prompt .hint-move").click();
+  await expect(page.locator("#movelist li").nth(2)).toContainText("b", { timeout: 15_000 });
 });
 
 test("a game survives a reload and a link restores it", async ({ page, context }) => {

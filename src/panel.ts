@@ -1,5 +1,5 @@
-import type { Ray } from "../engine/moves.ts";
-import { sameSquare, type Square } from "../engine/square.ts";
+import type { Move } from "../engine/position.ts";
+import { sameSquare } from "../engine/square.ts";
 import { distanceAlong, landings } from "../engine/landings.ts";
 import type { GameState } from "./game.ts";
 import { moveText } from "./notation.ts";
@@ -109,21 +109,17 @@ export function renderControls(state: GameState): void {
 }
 
 // Open rays get a number instead of a tap: how far along this line.
-export function renderPrompt(
-  el: HTMLElement,
-  state: GameState,
-  onMove: (from: Square, ray: Ray, n: number) => void,
-): void {
+export function renderPrompt(el: HTMLElement, state: GameState, onMove: (m: Move) => void): void {
   const open = state.reach?.rays.filter((r) => r.length === Infinity) ?? [];
-  if (!state.selected || !open.length) {
+  const from = state.selected;
+  const hinted =
+    from && state.hint?.move && sameSquare(state.hint.move.from, from) ? state.hint.move.to : null;
+  if (!from || (!open.length && !hinted)) {
     el.hidden = true;
     el.innerHTML = "";
     delete el.dataset.for;
     return;
   }
-  const from = state.selected;
-  const hinted =
-    state.hint?.move && sameSquare(state.hint.move.from, from) ? state.hint.move.to : null;
   // The same selection keeps its form, so a number being typed survives a redraw.
   const key = `${from.x},${from.y}:${hinted ? `${hinted.x},${hinted.y}` : ""}`;
   if (el.dataset.for === key && !el.hidden) return;
@@ -131,8 +127,21 @@ export function renderPrompt(
   el.hidden = false;
   el.innerHTML = "";
   const head = document.createElement("h2");
-  head.textContent = "Open line";
   el.append(head);
+  const onOpenRay =
+    hinted !== null && open.some((ray) => distanceAlong(from, hinted, ray) !== null);
+  // A hint that names one square is answered by that square, not by the open rays.
+  if (hinted && !onOpenRay) {
+    head.textContent = "Hint";
+    const go = document.createElement("button");
+    go.type = "button";
+    go.className = "hint-move";
+    go.textContent = `Move to (${hinted.x},${hinted.y})`;
+    go.addEventListener("click", () => onMove({ from, to: hinted }));
+    el.append(go);
+    return;
+  }
+  head.textContent = "Open line";
   for (const ray of open) {
     const suggested = hinted ? distanceAlong(from, hinted, ray) : null;
     const form = document.createElement("form");
@@ -153,11 +162,15 @@ export function renderPrompt(
     go.type = "submit";
     go.textContent = "Move";
     form.append(label, go);
+    const along = (n: number): Move => ({
+      from,
+      to: { x: from.x + ray.dir.dx * n, y: from.y + ray.dir.dy * n },
+    });
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const n = Math.floor(Number(input.value));
       if (!Number.isFinite(n) || n < 1 || n > MAX_COORD) return;
-      onMove(from, ray, n);
+      onMove(along(n));
     });
     el.append(form);
     const stops = landings(state.pos, from, ray);
@@ -172,7 +185,7 @@ export function renderPrompt(
       b.dataset.n = String(stop.n);
       if (stop.n === suggested) b.classList.add("hinted");
       b.innerHTML = `<span>${stop.n}</span>${stop.label}`;
-      b.addEventListener("click", () => onMove(from, ray, stop.n));
+      b.addEventListener("click", () => onMove(along(stop.n)));
       li.append(b);
       list.append(li);
     }

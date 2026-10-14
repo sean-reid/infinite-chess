@@ -330,6 +330,13 @@ button {
   padding: 0 0.75rem;
 }
 
+.prompt .hint-move {
+  min-height: 44px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--accent);
+  margin: 0.25rem 0 0.5rem;
+}
+
 .prompt .landings {
   list-style: none;
   margin: 0.25rem 0 0.5rem;
