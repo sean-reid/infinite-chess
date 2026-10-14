@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.1.0...infinite-chess-v0.2.0) (2026-10-14)
+
+
+### Features
+
+* hint fills in its move and lists the landings on an open line ([#34](https://github.com/sean-reid/infinite-chess/issues/34)) ([6a7c9f6](https://github.com/sean-reid/infinite-chess/commit/6a7c9f61340e49c41461242dd1e7512cb772d7f9))
+
+
+### Bug Fixes
+
+* stack the masthead on phones ([#35](https://github.com/sean-reid/infinite-chess/issues/35)) ([3ddf266](https://github.com/sean-reid/infinite-chess/commit/3ddf266fc7fa63fbaeca11172b85dbe2dc3aa683))
+
 ## 0.1.0 (2026-10-13)
 
 
