@@ -61,6 +61,7 @@ function paintNow(): void {
     steps: st.reach?.steps ?? [],
     lastMove: last ? { from: last.from, to: last.to } : null,
     check: inCheck(st.pos, st.pos.turn) ? king : null,
+    target: st.hint?.move?.to ?? null,
   });
 }
 

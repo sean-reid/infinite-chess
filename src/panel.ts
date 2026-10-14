@@ -1,5 +1,6 @@
 import type { Ray } from "../engine/moves.ts";
-import type { Square } from "../engine/square.ts";
+import { sameSquare, type Square } from "../engine/square.ts";
+import { distanceAlong, landings } from "../engine/landings.ts";
 import type { GameState } from "./game.ts";
 import { moveText } from "./notation.ts";
 import { formatValue } from "../engine/ordinal.ts";
@@ -120,17 +121,20 @@ export function renderPrompt(
     delete el.dataset.for;
     return;
   }
+  const from = state.selected;
+  const hinted =
+    state.hint?.move && sameSquare(state.hint.move.from, from) ? state.hint.move.to : null;
   // The same selection keeps its form, so a number being typed survives a redraw.
-  const key = `${state.selected.x},${state.selected.y}`;
+  const key = `${from.x},${from.y}:${hinted ? `${hinted.x},${hinted.y}` : ""}`;
   if (el.dataset.for === key && !el.hidden) return;
   el.dataset.for = key;
   el.hidden = false;
   el.innerHTML = "";
-  const from = state.selected;
   const head = document.createElement("h2");
   head.textContent = "Open line";
   el.append(head);
   for (const ray of open) {
+    const suggested = hinted ? distanceAlong(from, hinted, ray) : null;
     const form = document.createElement("form");
     form.className = "open-ray";
     const label = document.createElement("label");
@@ -141,7 +145,7 @@ export function renderPrompt(
     input.min = "1";
     input.max = String(MAX_COORD);
     input.step = "1";
-    input.value = "1";
+    input.value = String(suggested ?? 1);
     input.inputMode = "numeric";
     input.setAttribute("aria-label", `squares ${word}`);
     label.append(input);
@@ -156,5 +160,22 @@ export function renderPrompt(
       onMove(from, ray, n);
     });
     el.append(form);
+    const stops = landings(state.pos, from, ray);
+    if (!stops.length) continue;
+    const list = document.createElement("ul");
+    list.className = "landings";
+    list.setAttribute("aria-label", `landings ${word}`);
+    for (const stop of stops) {
+      const li = document.createElement("li");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.dataset.n = String(stop.n);
+      if (stop.n === suggested) b.classList.add("hinted");
+      b.innerHTML = `<span>${stop.n}</span>${stop.label}`;
+      b.addEventListener("click", () => onMove(from, ray, stop.n));
+      li.append(b);
+      list.append(li);
+    }
+    el.append(list);
   }
 }

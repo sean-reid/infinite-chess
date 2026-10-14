@@ -133,9 +133,9 @@ function fireAtFreshWing(
 export function mainLine(pos: Position): Hint {
   if (pos.atSquare(KEY_BISHOP) === "b") {
     return {
-      move: { from: KEY_BISHOP, to: step(KEY_BISHOP, 2, 2) },
+      move: { from: KEY_BISHOP, to: step(KEY_BISHOP, 3, 3) },
       open: { dx: 1, dy: 1 },
-      text: "Send the key bishop up its diagonal. Every three squares further is one more tower for white to work through.",
+      text: "Send the key bishop up its diagonal. Any distance is on the main line, and every three squares further is one more tower for white to work through.",
     };
   }
   const rook = attackedRook(pos);
@@ -144,7 +144,7 @@ export function mainLine(pos: Position): Hint {
     return {
       move: { from, to: step(from, 0, 1) },
       open: { dx: 0, dy: 1 },
-      text: "The rook is attacked. Move it up the tower: the higher it goes, the more pawn moves white needs to close the hole.",
+      text: "The rook is attacked. Move it up the tower: any height is on the main line, and the higher it goes, the more pawn moves white needs to close the hole.",
     };
   }
   const shot = lastShot(pos);

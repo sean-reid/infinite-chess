@@ -39,7 +39,7 @@ test("an open ray takes a number and white answers out there", async ({ page }) 
   await tapSquare(page, 46, 45);
   const input = page.locator("#prompt input");
   await input.fill("11");
-  await page.locator("#prompt button").click();
+  await page.getByRole("button", { name: "Move", exact: true }).click();
   await expect(page.locator("#movelist li").first()).toContainText("b (46,45)→(57,56)");
   await expect(page.locator("#movelist li").first()).toContainText("P (58,55)×(57,56)", {
     timeout: 15_000,
@@ -92,6 +92,10 @@ test("the game value and the hint follow the position", async ({ page }, info) =
   await page.getByRole("button", { name: "Hint" }).click();
   await expect(page.locator("#hint-text")).toContainText("key bishop");
   await expect(page.locator("#prompt")).toBeVisible();
+  await expect(page.locator("#prompt input")).toHaveValue("3");
+  await expect(page.locator("#prompt .landings button").first()).toContainText("1 tower");
+  await expect(page.locator("#prompt .landings button.hinted")).toContainText("2 towers");
+  await page.screenshot({ path: info.outputPath("hint-landings.png") });
   await tapSquare(page, 48, 47);
   await expect(page.locator("#movelist li").first()).toContainText("×", { timeout: 15_000 });
   await expect(page.locator("#ordinal")).toContainText("ω3", { timeout: 15_000 });
@@ -99,7 +103,14 @@ test("the game value and the hint follow the position", async ({ page }, info) =
   await expect(page.locator('[data-term="r"]')).toHaveText("1");
   await page.getByRole("button", { name: "Hint" }).click();
   await expect(page.locator("#hint-text")).toContainText("cannon");
+  const hinted = page.locator("#prompt .landings button.hinted");
+  await expect(hinted).toContainText("wing");
+  await expect(page.locator("#prompt input")).toHaveValue(
+    (await hinted.getAttribute("data-n")) ?? "",
+  );
   await page.screenshot({ path: info.outputPath("value-and-hint.png") });
+  await hinted.click();
+  await expect(page.locator("#movelist li").nth(1)).toContainText("b", { timeout: 15_000 });
 });
 
 test("a game survives a reload and a link restores it", async ({ page, context }) => {
