@@ -78,9 +78,7 @@ game.onChange((st) => {
   renderValue(ordinal, terms, st);
   renderHint(hintText, st);
   renderControls(st);
-  renderPrompt(prompt, st, (from, ray, n) => {
-    game.playBlack({ from, to: { x: from.x + ray.dir.dx * n, y: from.y + ray.dir.dy * n } });
-  });
+  renderPrompt(prompt, st, (m) => game.playBlack(m));
   // Follow a move that lands off screen, but never on a selection or a redraw.
   const last = st.pos.history.at(-1);
   if (st.pos.history.length !== seenMoves) {
