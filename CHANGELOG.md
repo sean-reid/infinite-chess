@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.2.0...infinite-chess-v0.2.1) (2026-10-14)
+
+
+### Bug Fixes
+
+* a hint that names one square offers that square, not the open rays ([#37](https://github.com/sean-reid/infinite-chess/issues/37)) ([d9b3bb2](https://github.com/sean-reid/infinite-chess/commit/d9b3bb2cb48afa8d014e26a81f8c9e02062aeac0))
+
 ## [0.2.0](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.1.0...infinite-chess-v0.2.0) (2026-10-14)
 
 
