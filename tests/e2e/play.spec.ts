@@ -39,7 +39,7 @@ test("an open ray takes a number and white answers out there", async ({ page }) 
   await tapSquare(page, 46, 45);
   const input = page.locator("#prompt input");
   await input.fill("11");
-  await page.locator("#prompt button").click();
+  await page.getByRole("button", { name: "Move", exact: true }).click();
   await expect(page.locator("#movelist li").first()).toContainText("b (46,45)→(57,56)");
   await expect(page.locator("#movelist li").first()).toContainText("P (58,55)×(57,56)", {
     timeout: 15_000,
