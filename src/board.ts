@@ -17,6 +17,7 @@ export interface Marks {
   steps?: Square[];
   lastMove?: { from: Square; to: Square } | null;
   check?: Square | null;
+  target?: Square | null;
 }
 
 interface Palette {
@@ -169,7 +170,19 @@ export class Board {
       ctx.fill();
     }
     for (const s of captures) this.outline(s, palette.accent, Math.max(1.5, scale / 10));
+    if (marks.target) this.ring(marks.target, palette.accent, Math.max(1.5, scale / 10));
     this.rulers(v);
+  }
+
+  private ring(s: Square, colour: string, width: number): void {
+    const { ctx } = this;
+    const { scale } = this.view;
+    const [px, py] = this.origin(s);
+    ctx.strokeStyle = colour;
+    ctx.lineWidth = width;
+    ctx.beginPath();
+    ctx.arc(px + scale / 2, py + scale / 2, scale * 0.42 - width / 2, 0, Math.PI * 2);
+    ctx.stroke();
   }
 
   private outline(s: Square, colour: string, width: number): void {
