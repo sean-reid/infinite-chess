@@ -36,7 +36,7 @@
   \begin{tabular}{@{}ll@{}}
     \toprule
     Part A, Sean & ordinals, open games, game values, positions worth $\omega$, $\omega^2$, $\omega^3$ \\
-    Part B, Andrew & the position worth $\omega^4$, its main line, the accounting, a live demo \\
+    Part B, Andrew & the position worth $\omega^4$, its main line, how the value falls move by move \\
     \bottomrule
   \end{tabular}
 \end{frame}
@@ -347,7 +347,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{The accounting}
+\begin{frame}{The value of a main-line position}
   \begin{block}{The value during the main line (\EHP, Section 3)}
     \[
       \omega^3\cdot r \;+\; \omega^2\cdot h \;+\; \omega\cdot b \;+\; g
@@ -365,7 +365,7 @@
   \flag{proof sketch} the paper's analysis is careful but informal in places; the slide reports its structure.
 \end{frame}
 
-\begin{frame}{The accounting, seen moving}
+\begin{frame}{The value, move by move}
   \flag{supplementary, ours} The next five frames are stills from a browser implementation of the Section 4
   compact position and of white's strategy, written for this presentation. It is not part of the published
   results. \url{https://infinite-chess.dwainosaur.com}
@@ -373,7 +373,7 @@
   Each still is the panel after one black move and white's reply. Watch which term moves.
 \end{frame}
 
-\begin{frame}{The accounting, moment 1 of 5}
+\begin{frame}{The value, move by move: 1 of 5}
   \framesubtitle{The key bishop goes out three squares}
   \centering
   \includegraphics[width=\textwidth,height=0.67\textheight,keepaspectratio]{figures/demo/1-key-bishop.png}
@@ -381,7 +381,7 @@
   {\footnotesize White takes it: $\omega^3\cdot 2+\omega^2\cdot 12$. The distance chose $r=2$; $h=12$ free moves to go in this tower.}
 \end{frame}
 
-\begin{frame}{The accounting, moment 2 of 5}
+\begin{frame}{The value, move by move: 2 of 5}
   \framesubtitle{Black opens cannon 1 at wing 1}
   \centering
   \includegraphics[width=\textwidth,height=0.67\textheight,keepaspectratio]{figures/demo/2-cannon-open.png}
@@ -389,7 +389,7 @@
   {\footnotesize $b$ and $g$ appear, and white's one free move took $h$ from 12 to 11: $\omega^3\cdot 2+\omega^2\cdot 11+\omega+2$.}
 \end{frame}
 
-\begin{frame}{The accounting, moment 3 of 5}
+\begin{frame}{The value, move by move: 3 of 5}
   \framesubtitle{The bishop attacks gate 1; white answers}
   \centering
   \includegraphics[width=\textwidth,height=0.67\textheight,keepaspectratio]{figures/demo/3-gate-answered.png}
@@ -397,7 +397,7 @@
   {\footnotesize A forced reply: $g$ went from 2 to 1 and nothing else moved: $\omega^3\cdot 2+\omega^2\cdot 11+\omega+1$.}
 \end{frame}
 
-\begin{frame}{The accounting, moment 4 of 5}
+\begin{frame}{The value, move by move: 4 of 5}
   \framesubtitle{Shooter 1 fires at wing 2}
   \centering
   \includegraphics[width=\textwidth,height=0.67\textheight,keepaspectratio]{figures/demo/4-shot.png}
@@ -405,12 +405,12 @@
   {\footnotesize $b$ fell to 0 and $g$ jumped to 7 as the shot reached a fresh wing: $\omega^3\cdot 2+\omega^2\cdot 11+7$.}
 \end{frame}
 
-\begin{frame}{The accounting, moment 5 of 5}
-  \framesubtitle{Six hundred plies on, the rook goes up five and is taken}
+\begin{frame}{The value, move by move: 5 of 5}
+  \framesubtitle{Six hundred plies on, the rook goes up five and is taken: $\omega^3+\omega^2\cdot 13+\omega$}
   \centering
   \includegraphics[width=\textwidth,height=0.67\textheight,keepaspectratio]{figures/demo/5-rook.png}
   \par\vskip 0.1cm
-  {\footnotesize From $\omega^3\cdot 2+\omega$ with $h=0$, the lift chose $h=14$; the capture spent the tower: $\omega^3+\omega^2\cdot 13+\omega$.}
+  {\footnotesize Before the lift the panel read $\omega^3\cdot 2+\omega$ with $h=0$. The height set $h$; the capture spent the tower and $r$ fell to 1.}
 \end{frame}
 
 \begin{frame}{Why deviations lose}
@@ -435,7 +435,7 @@
     \end{column}
     \begin{column}{0.7\textwidth}
       Section 4 of \EHP\ folds the battery onto a quarter plane. The gateways stay as before; the cannons
-      sit in a column with a vertical wall on the right. The same accounting applies, and the free quarter
+      sit in a column with a vertical wall on the right. The same value formula applies, and the free quarter
       plane leaves room for larger constructions. The stills above come from this version.
     \end{column}
   \end{columns}

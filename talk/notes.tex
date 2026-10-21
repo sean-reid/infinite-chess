@@ -223,7 +223,7 @@ more forced replies there. Opening a cannon costs black one tempo, which is whit
 n shots: the count b. The cannons grow along the battery, so black can always open a bigger one.}
 \source{[EHP17] Figure 5 and pages 11 to 13.}
 
-\slide{The accounting}{Andrew}{2:00}
+\slide{The value of a main-line position}{Andrew}{2:00}
 \screen{The ordinal with four terms and the three rules.}
 \say{Here is the whole position as a single ordinal: omega cubed times the towers left, plus omega squared
 times white's moves left in this tower, plus omega times the shots left, plus the forced replies left. A gateway
@@ -233,7 +233,7 @@ can never raise a leading term, and white lowers one whenever black runs out of 
 analysis of this is careful but written informally, so we label it a sketch.}
 \source{[EHP17] Section 3, pages 13 to 15.}
 
-\slide{The accounting, seen moving}{Andrew}{0:20}
+\slide{The value, move by move}{Andrew}{0:20}
 \screen{The supplementary label and the app's address.}
 \say{The next five frames are stills from a browser implementation we wrote for this presentation. It plays
 white's strategy from the paper on the compact version of the position from Section 4 and shows the value
@@ -257,7 +257,7 @@ free move, and it used it: climbing the inner wall took h from twelve to eleven.
 \slide{Moment 3: a forced reply}{Andrew}{0:15}
 \screen{The bishop on gate 1's attack square; white's guard has moved; $\omega^3\cdot 2+\omega^2\cdot 11+\omega+1$.}
 \say{Black attacked gate one and white had to answer. g dropped from two to one and nothing else moved. That is
-what a forced reply looks like in the accounting.}
+what a forced reply looks like in the value.}
 
 \slide{Moment 4: a shot}{Andrew}{0:15}
 \screen{Shooter 1 on wing 2's hallway; white shoring up the cannon; $\omega^3\cdot 2+\omega^2\cdot 11+7$.}
@@ -267,8 +267,9 @@ will each cost white a move as well.}
 \slide{Moment 5: the rook}{Andrew}{0:30}
 \screen{Six hundred plies on, the rook lifted five and captured; $\omega^3+\omega^2\cdot 13+\omega$.}
 \say{This still is from much later in the same game, saved as a link. White had finished the tower's free moves,
-h was zero, and the rook came under attack. Black lifted it five squares, which chose h equals fourteen, and the
-capture spent the tower: r fell from two to one. The whole cycle now starts again with one tower left.}
+h was zero, and the rook came under attack. Black lifted it five squares, which set h to fourteen for a moment; white's capture is the first of those moves,
+so the still shows h equals thirteen, and it spent the tower: r fell from two to one. The g term reads omega because a
+bishop still sits in a doorway with its threats open. The whole cycle now starts again with one tower left.}
 \source{The saved game is \input{build/link.tex}; it opens the app at move 304 with the rook attacked.}
 
 \slide{Why deviations lose}{Andrew}{1:30}
@@ -282,7 +283,7 @@ bishops that are stuck above the pawn diagonal. Each line here stands for a para
 
 \slide{The compact battery}{Andrew}{0:40}
 \screen{Figure 6 of [EHP17].}
-\say{Section 4 folds the battery onto a quarter plane with a vertical wall. Same gateways, same accounting,
+\say{Section 4 folds the battery onto a quarter plane with a vertical wall. Same gateways, same value formula,
 and a free quarter plane left over for bigger constructions. The demo uses this version.}
 \source{[EHP17] Section 4, pages 21 and 22.}
 

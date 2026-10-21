@@ -50,6 +50,7 @@ await landing("2 towers");
 await still("1-key-bishop");
 await hint();
 await landing("wing 1");
+await page.getByRole("button", { name: "Cannons" }).click();
 await still("2-cannon-open");
 await hint();
 await moveTo();

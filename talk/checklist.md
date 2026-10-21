@@ -11,8 +11,8 @@ What the grading rubric asks for, and where the deck answers it.
 - Context and connections: slides 2 and 13, the hand-off from the 2014 results to the 2017 theorem.
 - Unfamiliar terms defined: open game on slide 4, ordinals on slide 5, game value on slide 7, the omega one of chess on slide 13.
 - Precise statements with quantifiers: the definition on slide 7, the fundamental observation on slide 8, Theorem 1 on slide 14.
-- A worked example: slides 10 and 11, and the five accounting moments on slides 21 to 26.
-- The proof's key reasoning: the full proof on slides 8 and 9, the tempo lemma on slide 16, the accounting on slide 20.
+- A worked example: slides 10 and 11, and the five move-by-move value stills on slides 21 to 26.
+- The proof's key reasoning: the full proof on slides 8 and 9, the tempo lemma on slide 16, the value formula on slide 20.
 - Hypotheses and logical dependencies: open game before value, well-foundedness before the proof, the tempo lemma before gateways and cannons.
 - Proof sketches and omissions labelled: every slide carries a label; say the word "sketch" out loud where the label says so.
 - Unproved results stated with why they apply: Theorem 4, Conjecture 5, Theorem 10 and Gale-Stewart on slides 9 and 13.
@@ -24,7 +24,7 @@ While recording.
 - Say the slide's takeaway sentence from the notes before moving on.
 - Name the paper and figure number when a diagram comes up.
 - Keep each slide near its target time; the notes total 25 minutes.
-- On the accounting moments, read the value aloud and say which term moved.
+- On the move-by-move slides, read the value aloud and say which term moved.
 
 After recording.
 
