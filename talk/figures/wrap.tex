@@ -1,0 +1,13 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{amssymb}
+\usepackage{chessboard}
+\normallineskip=0pt
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\ifdefined\papereh
+  \setchessboard{margin=true,moverstyle=triangle,tinyboard,labelbottom=true,labelleft=true,
+    labelfontsize=6pt,labelleftwidth=2ex,linewidth=.05ex,border=false}
+\fi
+\begin{document}
+\input{\figfile}
+\end{document}

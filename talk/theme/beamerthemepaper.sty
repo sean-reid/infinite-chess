@@ -1,0 +1,144 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemepaper}[2026/10/21 cream paper theme matching the infinite chess app]
+
+\mode<presentation>
+
+\RequirePackage{fontspec}
+\RequirePackage{unicode-math}
+\RequirePackage{tikz}
+
+\definecolor{paper}{HTML}{F4EFE6}
+\definecolor{ink}{HTML}{1B1A17}
+\definecolor{inksoft}{HTML}{625C51}
+\definecolor{rule}{HTML}{C9C1B1}
+\definecolor{shade}{HTML}{E8E1D3}
+\definecolor{accent}{HTML}{B3301B}
+
+\setmainfont{SourceSerifPro}[
+  Extension=.otf,
+  UprightFont=*-Regular,
+  BoldFont=*-Semibold,
+  ItalicFont=*-RegularIt,
+  BoldItalicFont=*-SemiboldIt,
+  Numbers=Proportional,
+]
+\setsansfont{SourceSerifPro}[
+  Extension=.otf,
+  UprightFont=*-Regular,
+  BoldFont=*-Semibold,
+  ItalicFont=*-RegularIt,
+  BoldItalicFont=*-SemiboldIt,
+]
+\setmonofont{JetBrainsMono}[
+  Path=fonts/,
+  Extension=.ttf,
+  UprightFont=*-Regular,
+  BoldFont=*-Medium,
+  Scale=MatchLowercase,
+]
+\setmathfont{Latin Modern Math}
+
+\usefonttheme{professionalfonts}
+\setbeamerfont{title}{size=\LARGE,series=\mdseries}
+\setbeamerfont{subtitle}{size=\large,series=\mdseries}
+\setbeamerfont{author}{size=\normalsize}
+\setbeamerfont{institute}{size=\small}
+\setbeamerfont{date}{size=\small}
+\setbeamerfont{frametitle}{size=\large,series=\mdseries}
+\setbeamerfont{framesubtitle}{size=\normalsize,series=\mdseries}
+\setbeamerfont{block title}{size=\normalsize,series=\bfseries}
+\setbeamerfont{caption}{size=\footnotesize}
+\setbeamerfont{footline}{size=\scriptsize}
+
+\setbeamercolor{background canvas}{bg=paper}
+\setbeamercolor{normal text}{fg=ink,bg=paper}
+\setbeamercolor{structure}{fg=ink}
+\setbeamercolor{alerted text}{fg=accent}
+\setbeamercolor{example text}{fg=inksoft}
+\setbeamercolor{title}{fg=ink}
+\setbeamercolor{subtitle}{fg=inksoft}
+\setbeamercolor{author}{fg=ink}
+\setbeamercolor{institute}{fg=inksoft}
+\setbeamercolor{date}{fg=inksoft}
+\setbeamercolor{frametitle}{fg=ink,bg=paper}
+\setbeamercolor{framesubtitle}{fg=inksoft}
+\setbeamercolor{footline}{fg=inksoft}
+\setbeamercolor{item}{fg=accent}
+\setbeamercolor{block title}{fg=ink,bg=shade}
+\setbeamercolor{block body}{fg=ink,bg=shade}
+\setbeamercolor{block title alerted}{fg=accent,bg=shade}
+\setbeamercolor{block body alerted}{fg=ink,bg=shade}
+\setbeamercolor{block title example}{fg=inksoft,bg=shade}
+\setbeamercolor{block body example}{fg=ink,bg=shade}
+\setbeamercolor{caption name}{fg=inksoft}
+\setbeamercolor{section in toc}{fg=ink}
+\setbeamercolor{subsection in toc}{fg=inksoft}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}{\raisebox{0.35ex}{\rule{0.55ex}{0.55ex}}}
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{caption}{\insertcaption}
+\setbeamertemplate{blocks}[rounded=false,shadow=false]
+\setbeamertemplate{section in toc}{\inserttocsectionnumber.~\inserttocsection}
+
+\setbeamersize{text margin left=1.0cm,text margin right=1.0cm}
+
+\setbeamertemplate{frametitle}{%
+  \vskip 0.45cm
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle\par}%
+  \ifx\insertframesubtitle\@empty\else
+    \vskip 0.1cm
+    {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\par}%
+  \fi
+  \vskip 0.15cm
+  {\color{rule}\hrule height 0.4pt}%
+  \vskip 0.2cm
+}
+
+\newcommand{\presenter}{}
+\newcommand{\setpresenter}[1]{\renewcommand{\presenter}{#1}}
+
+\setbeamertemplate{footline}{%
+  \hbox{%
+    \hspace{1.0cm}%
+    \usebeamerfont{footline}\usebeamercolor[fg]{footline}%
+    \insertshorttitle\quad\textcolor{rule}{|}\quad\presenter
+    \hfill
+    \insertframenumber
+    \hspace{1.0cm}%
+  }%
+  \vskip 0.3cm
+}
+
+\setbeamertemplate{title page}{%
+  \vfill
+  \begin{beamercolorbox}[wd=\textwidth]{title}
+    \usebeamerfont{title}\inserttitle\par
+  \end{beamercolorbox}
+  \vskip 0.4cm
+  \begin{beamercolorbox}[wd=\textwidth]{subtitle}
+    \usebeamerfont{subtitle}\insertsubtitle\par
+  \end{beamercolorbox}
+  \vskip 0.4cm
+  {\color{rule}\hrule height 0.4pt}
+  \vskip 0.4cm
+  \begin{beamercolorbox}[wd=\textwidth]{author}
+    \usebeamerfont{author}\insertauthor\par
+  \end{beamercolorbox}
+  \vskip 0.2cm
+  \begin{beamercolorbox}[wd=\textwidth]{institute}
+    \usebeamerfont{institute}\insertinstitute\par
+  \end{beamercolorbox}
+  \vskip 0.2cm
+  \begin{beamercolorbox}[wd=\textwidth]{date}
+    \usebeamerfont{date}\insertdate\par
+  \end{beamercolorbox}
+  \vfill
+}
+
+\newcommand{\fig}[2][\textwidth]{\includegraphics[width=#1,height=0.68\textheight,keepaspectratio]{build/figures/#2.pdf}}
+\newcommand{\credit}[1]{{\par\vskip 0.1cm\scriptsize\color{inksoft}#1\par}}
+\newcommand{\coord}[1]{{\small\ttfamily #1}}
+\newcommand{\flag}[1]{\textcolor{accent}{\footnotesize\textsc{#1}}}
+
+\mode<all>

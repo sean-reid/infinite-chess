@@ -1,0 +1,95 @@
+% Figure 4 of Evans, Hamkins and Perlmutter, Integers 17 (2017), paper G4; typeset from the authors' arXiv source 1510.08155.
+\catcode`\.=\active\def.{{1}}
+\chessboard[maxfield=w33,
+            boardfontsize=8pt,
+            label=false,
+            labelbottom=true,
+            labelleft=true,
+            labelfontsize=5pt,
+            labelleftwidth=2ex,
+            hlabelformat={\hfill\arabic{ranklabel}\,\,},
+            showmover=false,
+            border=false,
+            margin=false,
+            % bullet diagonal:
+            coloremphstyle=\color{blue!50!black},
+            emphfields={d20,e19,f18,g17,h16,i15,j14,k13,l12,m11,n10,o9,p8,q7,r6,s5,t4,u3,v2,w1},
+            % white bishop tower guards:
+            coloremphstyle=\color{red!75!black},
+            emphfields={d25,j19,p13},
+            % white gateway pawns:
+            coloremphstyle=\color{orange!50!black},
+            emphfields={f22,l16,r10},
+            % zig-zags for the bishop tower guards:
+            pgfstyle=color,
+            color=red!65!white,
+            padding=-200000sp,
+            backfields={e24,d23,k18,j17,q12,p11},
+            % The attack positions:
+            pgfstyle=border,
+            padding=-100000sp,
+            linewidth=20000sp,
+            color=blue!50!black,
+            backfields={d20,j14,p8},
+            % initial bullet entry:
+            pgfstyle=straightmove,
+            linewidth=20000sp,
+            shortenstart=-20pt,
+            shortenend=3pt,
+            color=blue!50!black,
+            backmove={w1-p8},
+            % attack arrows at the gateways:
+            pgfstyle=straightmove,
+            linewidth=20000sp,
+            shortenstart=3pt,
+            shortenend=4pt,
+            color=blue!50!black,
+            backmove={d20-f22,j14-l16,p8-r10},
+            % exit path for black:
+            pgfstyle=color,
+            color=blue!50!black,
+            padding=-3pt,
+            backfields={m17,n18,o19,p20,o21,n22,m23,l24,k25,j26,i27,h28,g29,f30,e31,d32},
+            % exit path for white:
+            pgfstyle=color,
+            color=red!75!white,
+            padding=-3pt,
+            backfields={k16,m16,n17,o18,p19,o20,n21,m22,l23,k24,j25,i26,h27,g28,f29,e30,d31},
+            % The position itself:
+            setfen=%
+............./%
+............./%
+............./%
+............./%
+............./%
+...p........../%
+..pPp.........../%
+..P.Pp........../%
+..pB.P........../%
+..P..p........../%
+..p..P......./%
+..Pp.P...p.../%
+..pP.P..pPp..../%
+..P..p..P.Pp.../%
+..p..Pp.pB.P..../%
+..Pp..PpP..p.../%
+...Pp..Pp..P..../%
+....Pp..Pp.P...p...../%
+.....Pp..P.P..pPp../%
+......Pp...p..P.Pp./%
+.......Pp..Pp.pB.P...../%
+........Pp..PpP..p..../%
+.........Pp..Pp..P......p....../%
+..........Pp..Pp.P.....pP...../%
+...........Pp..P.P....pP..../%
+............Pp...p...pP...../%
+.............Pp..Pp.pP...../%
+..............Pp..PpP..../%
+...............Pp..P...../%
+................Pp....../%
+................pP...../%
+...............pP...../%
+..............pP...../%
+.............pP...../%
+............pP...../%
+]%

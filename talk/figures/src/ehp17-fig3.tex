@@ -1,0 +1,64 @@
+% Figure 3 of Evans, Hamkins and Perlmutter, Integers 17 (2017), paper G4; typeset from the authors' arXiv source 1510.08155.
+\catcode`\.=\active\def.{{1}}
+\chessboard[maxfield=w31,
+            boardfontsize=8pt,
+            label=false,
+            labelbottom=true,
+            labelleft=true,
+            labelfontsize=5pt,
+            labelleftwidth=2ex,
+            hlabelformat={\hfill\arabic{ranklabel}\,\,},
+            showmover=false,
+            border=false,
+            margin=false,
+            % black guard pawns:
+            coloremphstyle=\color{blue!65!red!50!black},
+            emphfields={e15,h18,k21,n24,q27,t30},
+            % key attack pawn emphasis:
+            coloremphstyle=\color{red!50!black},
+            emphfields={f12,i15,l18,o21,r24,u27},
+            % key bishop emphasis:
+            coloremphstyle=\color{blue!50!black},
+            emphfield=f7,
+            % key bishop arrow:
+            pgfstyle=straightmove,
+            linewidth=10000sp,
+            shortenstart=-2pt,
+            color=blue!50!black,
+            backmove={f7-q18},
+            % mating bishop emphasis:
+            coloremphstyle=\color{red},
+            emphfield=d15,
+            % The position:
+            setfen=%
+..P.PP.PP.PP.PP.PPrP.BP/%
+..P.PP.PP.PP.PP.P.BpB.P/%
+..P.PP.PP.PP.PP.PB.P.BP/%
+..P.PP.PP.PP.PPrP.BPB.P/%
+..P.PP.PP.PP.P.BpB.PPBp/%
+..P.PP.PP.PP.PB.P.BPBpP/%
+..P.PP.PP.PPrP.BPB.PpP./%
+..P.PP.PP.P.BpB.PPBpP../%
+..P.PP.PP.PB.P.BPBpP..p/%
+..P.PP.PPrP.BPB.PpP..pP/%
+..P.PP.P.BpB.PPBpP..pPp/%
+..P.PP.PB.P.BPBpP..pPpP/%
+..P.PPrP.BPB.PpP..pPpP/%
+..P.P.BpB.PPBpP..pPpP./%
+..P.PB.P.BPBpP..pPpP../%
+..PrP.BPB.PpP..pPpP.../%
+..pBpB.PPBpP..pPpP/%
+..P.P.BPBpP..pPpP./%
+....PB.PpP..pPpP.../%
+....PPBpP..pPpP..../%
+....PBpP..pPpP..../%
+....PpP..pPpP............/%
+..p.pP..pPpP............../%
+..P.P..pPpP............/%
+..pBpbpPpP.........../%
+..P.P.P.P............/%
+....pBp................/%
+....P.P.........../%
+.........../%
+.........../%
+]%

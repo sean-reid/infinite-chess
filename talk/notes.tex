@@ -1,0 +1,264 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\setmainfont{SourceSerifPro}[Extension=.otf,UprightFont=*-Regular,BoldFont=*-Semibold,ItalicFont=*-RegularIt,BoldItalicFont=*-SemiboldIt]
+\setmonofont{JetBrainsMono}[Path=fonts/,Extension=.ttf,UprightFont=*-Regular,Scale=MatchLowercase]
+\setmathfont{Latin Modern Math}
+\definecolor{accent}{HTML}{B3301B}
+\definecolor{inksoft}{HTML}{625C51}
+\hypersetup{colorlinks,urlcolor=accent,linkcolor=black}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\newcounter{slide}
+\newcommand{\slide}[3]{\stepcounter{slide}\subsection*{Slide \theslide: #1}{\color{inksoft}\small #2 \textperiodcentered\ #3}\par\vskip 0.3em}
+\newcommand{\screen}[1]{\textbf{On screen.} #1\par}
+\newcommand{\say}[1]{\textbf{Say.} #1\par}
+\newcommand{\takeaway}[1]{\textbf{Takeaway.} #1\par}
+\newcommand{\source}[1]{{\color{inksoft}\small Source: #1}\par}
+
+\title{Speaker notes: transfinite game values in infinite chess}
+\author{Sean Reid and Andrew Shargel}
+\date{Draft of 21 October 2026}
+
+\begin{document}
+\maketitle
+
+Each entry gives the presenter, a target time, what the slide shows, a script in full sentences, the one
+thing the audience should keep, and where in the papers the claim lives. Total target: 25 minutes.
+[EH14] is Evans and Hamkins, Integers 14 (2014) G2. [EHP17] is Evans, Hamkins and Perlmutter,
+Integers 17 (2017) G4. Page numbers refer to the published PDFs.
+
+\section*{Part A: ordinals and game values}
+
+\slide{Title}{Sean}{0:20}
+\screen{Title, our names, the journal.}
+\say{We are presenting two papers from the journal Integers by Evans, Hamkins and Perlmutter about infinite
+chess. The question they answer sounds like a joke and turns out to be real mathematics: if you are going to
+lose a game of chess, how long can you make it last, and what kind of number measures that?}
+
+\slide{Two papers, one topic}{Sean}{0:40}
+\screen{The two citations and the split of the talk.}
+\say{The 2014 paper builds the theory of game values and gives positions worth omega, omega squared and omega
+cubed. The 2017 paper builds one position worth omega to the fourth, which is still the record for ordinary
+infinite chess. I will do the theory and the small examples. Andrew will take you through the big position
+and show it running.}
+
+\slide{Infinite chess}{Sean}{0:50}
+\screen{Five rules of the game.}
+\say{Infinite chess is chess on the integer lattice. Same pieces, same moves, no edge anywhere. There is no
+last rank, so pawns never promote. You win by checkmate, which happens at a definite move. A game that never
+ends is a draw, and we drop the fifty-move and repetition rules, which only exist to force finite games.
+Positions may have infinitely many pieces, as long as a rule says what is on each square. We assume you know
+how the pieces move and nothing more.}
+\source{[EH14] Section 1 and footnotes on pages 4 and 5; [EHP17] Section 2, page 4.}
+
+\slide{Open games}{Sean}{1:30}
+\screen{The definition of an open game.}
+\say{Here is the one piece of general theory. A game is open for a player if whenever that player wins, the
+win is already settled after finitely many moves. Chess is open for white, because checkmate is a fact about a
+single position, and the same for black. A draw by infinite play is never settled at a finite stage, which is
+why we will assign numbers from white's point of view and treat black separately. Everything I say next is
+about open games in general. Chess is just where the examples come from.}
+\takeaway{Open means a win shows up at a finite stage.}
+\source{[EHP17] Section 2, first paragraph; [EH14] Section 2.}
+
+\slide{Counting past the natural numbers}{Sean}{2:30}
+\screen{The sequence of ordinals and the one fact.}
+\say{We need numbers that go past the naturals. The ordinals do that. After every natural number comes omega.
+After omega comes omega plus one, then omega plus two, and after all of those comes omega times two. Keep
+going and you reach omega squared, omega cubed, omega to the fourth. Two kinds of ordinal matter: successors,
+which have a predecessor, and limits like omega, which do not. You can add and multiply, and an expression like
+omega cubed times five plus omega squared times seven plus omega plus fourteen is a single ordinal; you compare
+two of them by the leading term first, like comparing numbers digit by digit. We need one fact: there is no
+infinite strictly decreasing sequence of ordinals. The reason is that any nonempty collection of ordinals has a
+least member, and a decreasing sequence would have no least member. Hold on to that fact; every proof today
+rests on it.}
+\takeaway{No infinite descent.}
+\source{Standard; stated in [EH14] Section 2, page 5.}
+
+\slide{A countdown game}{Sean}{2:00}
+\screen{The table of starting ordinals and what black gets to do. The slide says this is our device.}
+\say{Before any chess, here is a toy game we made up to show what the ordinals will mean. A counter shows an
+ordinal. White wins when it reads zero. At a successor, white steps down by one. At a limit, black chooses any
+smaller ordinal. Start at a natural number and black does nothing; the game lasts exactly that many moves.
+Start at omega and black names a natural number, so the game lasts as long as black likes, but still finitely.
+Start at omega times two and black gets to name a number twice. Start at omega squared and black names how many
+times he will later get to name a number. White always wins by the no-descent fact. The ordinal measures how
+much control black has over the length.}
+\takeaway{The ordinal is a budget of announcements.}
+\source{Our device. The announcement reading of values is [EH14] Section 2, page 5, and [EHP17] Section 2, page 5.}
+
+\slide{Game value: the definition}{Sean}{2:00}
+\screen{The three clauses of the definition.}
+\say{Now the real definition, from white's point of view. A position where white has already won has value
+zero. If it is white's turn, the value is alpha plus one where alpha is the least value white can move to. If
+it is black's turn, the position has a value only if every legal black move leads to a valued position, and
+then the value is the supremum of those. Read the quantifiers: white needs one good move, black needs all moves
+to be covered. The valuation is the least assignment obeying these clauses, and some positions get nothing.
+Finite value n is mate in n. Value omega means white wins and black's first move picks a natural number n with
+the game lasting at least n more white moves. That is the countdown game inside chess.}
+\takeaway{White: some move. Black: every move. Value is a supremum at black's turns.}
+\source{[EH14] Definition 1, pages 4 and 5; [EHP17] Section 2, page 4.}
+
+\slide{The fundamental observation}{Sean}{3:00}
+\screen{Theorem and proof.}
+\say{Here is the theorem we prove in full. If a position has a value, white has a winning strategy. If it has
+no value, black can prevent white from winning. First direction: white moves each turn to a position of least
+value, which by the successor clause is one less. Black, by the supremum clause, can never move to a higher
+value or to an unvalued position. So the values strictly decrease along the play, and by no-descent the play
+reaches zero, which is a win. Second direction: suppose the position has no value. If it is white's turn, no
+white move reaches a valued position, because one such move would have given the position a value by the
+successor clause. If it is black's turn, some black move reaches an unvalued position, because otherwise the
+supremum clause would have valued it. Black keeps choosing such moves and white never reaches zero. That is the
+whole proof. Historically this argument is the proof of the Gale and Stewart theorem that open games are
+determined; we only state that.}
+\takeaway{Value exists if and only if white can force a win, and reducing value is the strategy.}
+\source{[EH14] Section 2, page 5; [EHP17] Section 2, page 4.}
+
+\slide{Worked example: value omega}{Sean}{2:30}
+\screen{Figure 3 of [EH14] and the main line.}
+\say{A concrete position. Black to move, and the claim is value omega. The main line: black lifts the centre
+rook as high as he likes, and white rolls the king upward with checks until it is mated against the rook. The
+slide shows the line for height ten. The higher the rook, the longer the roll, so after black's first move
+the values are finite but unbounded, and their supremum is omega. Two things must be checked. Any other black
+first move loses at once; the slide lists the paper's refutations. And white has nothing faster: the tempting
+skewer of the lifted rook takes the white rook off the f file, which lets the black king escape the net.
+The paper gives these lines and says ``we claim''; we have not written out an exhaustive check, so this is a
+proof sketch.}
+\takeaway{One free choice by black, finite but unbounded, gives supremum omega.}
+\source{[EH14] Figure 3 and the text on pages 8 and 9.}
+
+\slide{Worked example: value omega squared}{Sean}{2:00}
+\screen{Figure 7 of [EH14].}
+\say{The next level nests the trick. An infinite pawn column splits the board. The marked pawn is a portcullis:
+when it moves, the queens on the left flood the right half and mate. Black lifts the centre rook to height n, and
+white must advance the column n times to free the bishop that keeps the door shut. But after every advance,
+black's free rook on the right checks the white king from a distance k of black's choosing, and white has to walk
+toward it for k moves before black must retreat and white can advance again. So black announces n, the number
+of rounds, and in each round announces k. That is omega squared.}
+\takeaway{Announce how many announcements: omega squared.}
+\source{[EH14] Figure 7 and pages 13 to 15.}
+
+\slide{From omega squared to omega cubed}{Sean}{1:30}
+\screen{Figure 10 of [EH14].}
+\say{One more nesting. The attacked bishop at m6 runs up the diagonal past as many towers as black likes
+before it is captured. Each tower is a copy of the previous position: a rook that goes up, a pawn column that
+marches, and the harassing rook on the left. The towers are consumed right to left. k towers give at least omega
+squared times k, k is unbounded, so the value is omega cubed. Keep this picture; the omega to the fourth
+position is this one with the harassing rook replaced by something stronger.}
+\source{[EH14] Figure 10 and pages 17 to 19.}
+
+\slide{What the 2014 paper proves and asks}{Sean}{1:30}
+\screen{The list of results with their labels.}
+\say{To close my half. The 2014 paper proves that positions with values omega, omega squared times k and omega
+cubed exist. It defines the omega one of chess, the supremum of all values, and proves upper bounds we only
+state: for finite positions the values are below the Church Kleene ordinal, and for arbitrary positions below
+omega one. They conjecture these bounds are sharp. In three-dimensional infinite chess they prove every
+countable ordinal occurs. Before 2015 the record in ordinary infinite chess was omega cubed. Andrew will show
+you omega to the fourth.}
+\source{[EH14] Theorem 4 page 10, Conjecture 5 page 26, Theorem 10 page 32; [EHP17] Section 1, page 2.}
+
+\section*{Part B: the position with value omega to the fourth}
+
+\slide{The theorem}{Andrew}{1:00}
+\screen{Theorem 1 of [EHP17] and the meaning of its words.}
+\say{Here is the result. There is a position in infinite chess with game value omega to the fourth; it is
+computable and has infinitely many pieces. Position means an assignment of pieces to squares with black to
+move. Computable means a program can tell you what is on any square. Value omega to the fourth means, in Sean's
+countdown language, four nested kinds of announcement for black.}
+\source{[EHP17] Theorem 1, page 3.}
+
+\slide{The position}{Andrew}{1:30}
+\screen{Figure 1 of [EHP17] and the three components.}
+\say{This is the whole position. Three parts. The throne room at the upper left holds both kings, locked in.
+The rook towers run off to the upper right; that is where white makes slow progress. The lower half is the
+bishop cannon battery, which is black's way of forcing white to answer threats. Both the towers and the
+battery continue forever.}
+\source{[EHP17] Figure 1 and page 6.}
+
+\slide{The throne room}{Andrew}{1:30}
+\screen{Figure 2 of [EHP17] and the tempo lemma.}
+\say{Nothing in the throne room can move, and both kings are exposed to a bishop of the right colour. A white
+bishop mates at once from the marked diagonal. A black bishop that reaches its diagonal needs three more moves
+to mate. That difference of three versus zero is the lemma everything else uses: if black's bishop reaches its
+diagonal with a white guard two moves behind, white still mates first.}
+\source{[EHP17] Figure 2 and pages 7 and 8.}
+
+\slide{The rook towers}{Andrew}{2:00}
+\screen{Figure 3 of [EHP17] and the four steps.}
+\say{The towers are the omega cubed machine. Black's key bishop at f7 is attacked and runs up the diagonal as
+far as black likes; that choice sets how many towers white must get through, the count r. White's pawn takes
+it, pierces the wall, and a key pawn advances to attack the guard pawn of a tower. The attacked rook goes up as
+high as black likes, the count h, and after it is captured white has to march the hole down one pawn move at a
+time. When the hole arrives, bishops in the next tower are released and everything repeats one tower to the
+left. The last tower frees the mating bishop.}
+\source{[EHP17] Figure 3 and pages 8 to 10.}
+
+\slide{A gateway terminal wing}{Andrew}{1:30}
+\screen{Figure 4 of [EHP17].}
+\say{A gateway wing is a long diagonal hallway with gates off it. A black bishop on the hallway can land on any
+attack square, each of which threatens a door pawn. If white ignores the threat, black takes the door, exits,
+and reaches the throne room three moves ahead of the guard, which mates by the lemma. So white must move the
+guard one step, after which it follows two behind, which the lemma says is enough. A wing of length n gives
+n plus one forced replies: the count g.}
+\source{[EHP17] Figure 4 and pages 10 and 11.}
+
+\slide{A bishop cannon}{Andrew}{1:30}
+\screen{Figure 5 of [EHP17].}
+\say{A cannon is a stack of bishops each capped by a pawn. Moving a capped bishop out uncovers a pawn threat
+that white must meet, so each shot is a forced reply, and the fired bishop lands in a fresh wing and spends g
+more forced replies there. Opening a cannon costs black one tempo, which is white's only free move, and buys
+n shots: the count b. The cannons grow along the battery, so black can always open a bigger one.}
+\source{[EHP17] Figure 5 and pages 11 to 13.}
+
+\slide{The accounting}{Andrew}{2:00}
+\screen{The ordinal with four terms and the three rules.}
+\say{Here is the whole position as a single ordinal: omega cubed times the towers left, plus omega squared
+times white's moves left in this tower, plus omega times the shots left, plus the forced replies left. A gateway
+attack lowers g. A shot lowers b and raises g by a lot. Opening a cannon raises b by a lot but gives white a
+free move, which lowers h. When h reaches zero the next tower starts, so r drops and black picks a new h. Black
+can never raise a leading term, and white lowers one whenever black runs out of forced replies. The paper's
+analysis of this is careful but written informally, so we label it a sketch.}
+\source{[EHP17] Section 3, pages 13 to 15.}
+
+\slide{Why deviations lose}{Andrew}{1:30}
+\screen{Four one-line summaries.}
+\say{Why can black not do better? Extra bishops are penned in and can only threaten door pawns, which white
+answers as before. Wild rook moves in distant towers can be ignored a fixed fraction of the time, so they buy
+less than the forced replies they replace. Exiting a gateway with the guard two behind loses the race. And white
+cannot shortcut either: no bishop escapes the towers early, and capturing more pawns to the right only frees
+bishops that are stuck above the pawn diagonal. Each line here stands for a paragraph of the paper.}
+\source{[EHP17] pages 15 to 17.}
+
+\slide{Live demo}{Andrew}{3:30}
+\screen{The browser, light theme, 16:9. The slide says the app is ours and not part of the papers.}
+\say{This is our own implementation, written for this presentation. It plays white's strategy from the paper
+on the compact version of the position from Section 4 and shows the value live. Follow the shot list in
+\texttt{demo/shots.md}: new game, hint, key bishop to three towers, read the value, rook up, open a cannon, fire
+and attack, watch b and g count down while white answers each threat.}
+\source{Supplementary material; \url{https://github.com/sean-reid/infinite-chess}.}
+
+\slide{The compact battery}{Andrew}{0:40}
+\screen{Figure 6 of [EHP17].}
+\say{Section 4 folds the battery onto a quarter plane with a vertical wall. Same gateways, same accounting,
+and a free quarter plane left over for bigger constructions. The demo uses this version.}
+\source{[EHP17] Section 4, pages 21 and 22.}
+
+\slide{Summary}{Andrew}{1:00}
+\screen{Four lines with labels.}
+\say{Open games have ordinal values, and a value exists exactly when white can force a win; that we proved.
+Omega is one announcement, omega squared nests them, omega cubed nests again with towers; those we sketched from
+the 2014 paper. Replacing the harassing rook by a cannon battery multiplies by omega squared instead of omega,
+which gives omega to the fourth; that we sketched from the 2017 paper. Whether every countable ordinal is a
+value in ordinary infinite chess is open.}
+
+\slide{References and credits}{Andrew}{0:20}
+\screen{Full citations, the DOIs, the figure credit, the repository.}
+\say{The papers, the figure credit and our code are on this slide. Thank you.}
+
+\end{document}
