@@ -12,4 +12,6 @@ Needs a TeX Live with `lualatex`, `latexmk`, `beamer`, `fontspec`, `unicode-math
 arXiv sources, one file per published figure, compiled with `pdflatex` and the `chessboard` package; each
 file names its source. Source Serif 4 and JetBrains Mono in `fonts/` are under the SIL Open Font License, texts alongside.
 
+`submission.md` is the Canvas text, `checklist.md` the recording list, and `demo/shots.md` the step list for the live demo with the panel readings to expect.
+
 CI builds both PDFs on every change under `talk/` and attaches them to each GitHub release.
