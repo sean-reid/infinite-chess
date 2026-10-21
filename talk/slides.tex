@@ -365,6 +365,54 @@
   \flag{proof sketch} the paper's analysis is careful but informal in places; the slide reports its structure.
 \end{frame}
 
+\begin{frame}{The accounting, seen moving}
+  \flag{supplementary, ours} The next five frames are stills from a browser implementation of the Section 4
+  compact position and of white's strategy, written for this presentation. It is not part of the published
+  results. \url{https://infinite-chess.dwainosaur.com}
+  \vskip 0.3cm
+  Each still is the panel after one black move and white's reply. Watch which term moves.
+\end{frame}
+
+\begin{frame}{The accounting, moment 1 of 5}
+  \framesubtitle{The key bishop goes out three squares}
+  \centering
+  \includegraphics[width=\textwidth,height=0.67\textheight,keepaspectratio]{figures/demo/1-key-bishop.png}
+  \par\vskip 0.1cm
+  {\footnotesize White takes it: $\omega^3\cdot 2+\omega^2\cdot 12$. The distance chose $r=2$; $h=12$ free moves to go in this tower.}
+\end{frame}
+
+\begin{frame}{The accounting, moment 2 of 5}
+  \framesubtitle{Black opens cannon 1 at wing 1}
+  \centering
+  \includegraphics[width=\textwidth,height=0.67\textheight,keepaspectratio]{figures/demo/2-cannon-open.png}
+  \par\vskip 0.1cm
+  {\footnotesize $b$ and $g$ appear, and white's one free move took $h$ from 12 to 11: $\omega^3\cdot 2+\omega^2\cdot 11+\omega+2$.}
+\end{frame}
+
+\begin{frame}{The accounting, moment 3 of 5}
+  \framesubtitle{The bishop attacks gate 1; white answers}
+  \centering
+  \includegraphics[width=\textwidth,height=0.67\textheight,keepaspectratio]{figures/demo/3-gate-answered.png}
+  \par\vskip 0.1cm
+  {\footnotesize A forced reply: $g$ went from 2 to 1 and nothing else moved: $\omega^3\cdot 2+\omega^2\cdot 11+\omega+1$.}
+\end{frame}
+
+\begin{frame}{The accounting, moment 4 of 5}
+  \framesubtitle{Shooter 1 fires at wing 2}
+  \centering
+  \includegraphics[width=\textwidth,height=0.67\textheight,keepaspectratio]{figures/demo/4-shot.png}
+  \par\vskip 0.1cm
+  {\footnotesize $b$ fell to 0 and $g$ jumped to 7 as the shot reached a fresh wing: $\omega^3\cdot 2+\omega^2\cdot 11+7$.}
+\end{frame}
+
+\begin{frame}{The accounting, moment 5 of 5}
+  \framesubtitle{Six hundred plies on, the rook goes up five and is taken}
+  \centering
+  \includegraphics[width=\textwidth,height=0.67\textheight,keepaspectratio]{figures/demo/5-rook.png}
+  \par\vskip 0.1cm
+  {\footnotesize From $\omega^3\cdot 2+\omega$ with $h=0$, the lift chose $h=14$; the capture spent the tower: $\omega^3+\omega^2\cdot 13+\omega$.}
+\end{frame}
+
 \begin{frame}{Why deviations lose}
   \begin{description}
     \item[Bishop armies] Black could free extra bishops instead of firing them. They are penned in by the
@@ -379,19 +427,6 @@
   \flag{proof sketch} each point is a one-line summary of a paragraph of \EHP, Section 3.
 \end{frame}
 
-\begin{frame}{Live demo}
-  \flag{supplementary, ours} an implementation of the Section 4 compact position and of white's strategy,
-  written for this presentation. It is not part of the published results.
-  \vskip 0.3cm
-  \url{https://infinite-chess.dwainosaur.com}
-  \begin{itemize}
-    \item Black's key bishop out: the value becomes $\omega^3\cdot r+\cdots$ with $r$ chosen by the distance.
-    \item The rook up: $h$ chosen by the height.
-    \item Open a cannon: $b$ jumps, white takes its one free move.
-    \item Fire and attack: $b$ and $g$ count down while white answers each threat.
-  \end{itemize}
-\end{frame}
-
 \begin{frame}{The compact battery}
   \begin{columns}[T]
     \begin{column}{0.26\textwidth}
@@ -401,7 +436,7 @@
     \begin{column}{0.7\textwidth}
       Section 4 of \EHP\ folds the battery onto a quarter plane. The gateways stay as before; the cannons
       sit in a column with a vertical wall on the right. The same accounting applies, and the free quarter
-      plane leaves room for larger constructions. The demo uses this version.
+      plane leaves room for larger constructions. The stills above come from this version.
     \end{column}
   \end{columns}
 \end{frame}
