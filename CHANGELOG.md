@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.3.0...infinite-chess-v0.4.0) (2026-10-21)
+
+
+### Features
+
+* **talk:** add the demo shot list, Canvas text, recording checklist and glossary ([#48](https://github.com/sean-reid/infinite-chess/issues/48)) ([71ea55c](https://github.com/sean-reid/infinite-chess/commit/71ea55c79cb477cba71aaef4fdacc48841141be0))
+
 ## [0.3.0](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.2.1...infinite-chess-v0.3.0) (2026-10-21)
 
 
