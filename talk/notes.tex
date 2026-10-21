@@ -105,19 +105,26 @@ the game lasting at least n more white moves. That is the countdown game inside 
 \takeaway{White: some move. Black: every move. Value is a supremum at black's turns.}
 \source{[EH14] Definition 1, pages 4 and 5; [EHP17] Section 2, page 4.}
 
-\slide{The fundamental observation}{Sean}{3:00}
-\screen{Theorem and proof.}
+\slide{The fundamental observation}{Sean}{1:40}
+\screen{Theorem and the first half of the proof.}
 \say{Here is the theorem we prove in full. If a position has a value, white has a winning strategy. If it has
 no value, black can prevent white from winning. First direction: white moves each turn to a position of least
 value, which by the successor clause is one less. Black, by the supremum clause, can never move to a higher
 value or to an unvalued position. So the values strictly decrease along the play, and by no-descent the play
-reaches zero, which is a win. Second direction: suppose the position has no value. If it is white's turn, no
-white move reaches a valued position, because one such move would have given the position a value by the
-successor clause. If it is black's turn, some black move reaches an unvalued position, because otherwise the
-supremum clause would have valued it. Black keeps choosing such moves and white never reaches zero. That is the
-whole proof. Historically this argument is the proof of the Gale and Stewart theorem that open games are
-determined; we only state that.}
-\takeaway{Value exists if and only if white can force a win, and reducing value is the strategy.}
+reaches zero, which is a win.}
+\takeaway{Reducing value is a winning strategy because the ordinals have no infinite descent.}
+\source{[EH14] Section 2, page 5; [EHP17] Section 2, page 4.}
+
+\slide{The fundamental observation, continued}{Sean}{1:20}
+\screen{The second half of the proof and the Gale and Stewart line.}
+\say{Second direction: suppose the position has no value. If it is white's turn, no white move reaches a
+valued position, because one such move would have given the position a value by the successor clause. If it
+is black's turn, some black move reaches an unvalued position, because otherwise the supremum clause would
+have valued it. Black keeps choosing such moves and white never reaches zero. That is the whole proof. So the
+valued positions are exactly the ones white can force to a win, and the same holds with the colours swapped.
+Historically this argument is the proof of the Gale and Stewart theorem that open games are determined; we
+only state that.}
+\takeaway{Value exists if and only if white can force a win.}
 \source{[EH14] Section 2, page 5; [EHP17] Section 2, page 4.}
 
 \slide{Worked example: value omega}{Sean}{2:30}
@@ -316,13 +323,13 @@ value in ordinary infinite chess is open.}
 
 \begin{description}
   \item[Open game] A game in which any win for the designated player is already decided after finitely many moves.
-  \item[Ordinal] A number in the well-ordered extension of the naturals: $0,1,2,\ldots,\omega,\omega+1,\ldots,\omega\cdot 2,\ldots,\omega^2,\ldots$
+  \item[Ordinal] A number in the well-ordered extension of the naturals: $0,1,2,\ldots,\omega,\ldots,\omega\cdot 2,\ldots,\omega^2,\ldots$
   \item[Successor, limit] $\alpha+1$ is the successor of $\alpha$; a limit ordinal such as $\omega$ has no predecessor.
   \item[Well-founded] No infinite strictly decreasing sequence exists. True of the ordinals.
   \item[Game value] The ordinal assigned to a position by the recursion on slide 7, from white's point of view.
   \item[Announcement] Black's move at a limit stage, choosing a smaller ordinal; in the countdown game, choosing a number.
   \item[Omega one of chess] The supremum of the game values of all positions; lightface over finite positions, boldface over all.
-  \item[Church--Kleene ordinal] The least ordinal that is not the order type of a computable well-ordering; an upper bound for values of finite positions.
+  \item[Church--Kleene ordinal] The least ordinal no computable well-ordering reaches; an upper bound for the values of finite positions.
   \item[Throne room] The locked chamber holding both kings in the $\omega^4$ position.
   \item[Rook tower] One repeating unit of white's main attack: guard pawn, rook, pawn column, bishops.
   \item[Gateway terminal wing] A diagonal hallway with gates, where a black bishop makes forced-reply threats.
