@@ -101,11 +101,11 @@
 \newcommand{\setpresenter}[1]{\renewcommand{\presenter}{#1}}
 
 \setbeamertemplate{footline}{%
-  \hbox{%
+  \hbox to \paperwidth{%
     \hspace{1.0cm}%
     \usebeamerfont{footline}\usebeamercolor[fg]{footline}%
     \insertshorttitle\quad\textcolor{rule}{|}\quad\presenter
-    \hfill
+    \hfil
     \insertframenumber
     \hspace{1.0cm}%
   }%
