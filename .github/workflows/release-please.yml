@@ -26,13 +26,30 @@ jobs:
     runs-on: ubuntu-latest
     container: texlive/texlive:latest
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - run: make -C talk
-      - run: gh release upload "$TAG" talk/build/slides.pdf talk/build/notes.pdf --clobber --repo "$GITHUB_REPOSITORY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: talk
+          path: |
+            talk/build/slides.pdf
+            talk/build/notes.pdf
+
+  talk-attach:
+    needs: [release-please, talk-pdfs]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: talk
+          path: pdfs
+      - run: gh release upload "$TAG" pdfs/slides.pdf pdfs/notes.pdf --clobber --repo "$GITHUB_REPOSITORY"
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ needs.release-please.outputs.tag_name }}

@@ -19,8 +19,6 @@ jobs:
   pdfs:
     runs-on: ubuntu-latest
     container: texlive/texlive:latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v7
         with:
@@ -33,8 +31,19 @@ jobs:
           path: |
             talk/build/slides.pdf
             talk/build/notes.pdf
-      - if: github.event_name == 'workflow_dispatch'
-        run: gh release upload "$TAG" talk/build/slides.pdf talk/build/notes.pdf --clobber --repo "$GITHUB_REPOSITORY"
+
+  attach:
+    if: github.event_name == 'workflow_dispatch'
+    needs: pdfs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: talk
+          path: pdfs
+      - run: gh release upload "$TAG" pdfs/slides.pdf pdfs/notes.pdf --clobber --repo "$GITHUB_REPOSITORY"
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
