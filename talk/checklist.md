@@ -3,8 +3,8 @@
 Before recording.
 
 - Build the current release's slides.pdf and notes.pdf, or download them from the release. Open the slides in a viewer at 16:9 with no toolbar.
-- Open https://infinite-chess.dwainosaur.com in a browser window at the same size as the slides, light theme, and walk demo/shots.md once from a fresh game to confirm every reading in it.
-- Open the prepared link from demo/shots.md in a second tab so the rook step is ready.
+- Open https://infinite-chess.dwainosaur.com in a browser window at the same size as the slides, light theme, and walk the slide 22 steps in the notes once from a fresh game to confirm every reading in them.
+- Open the prepared link from the slide 22 entry in the notes in a second tab so the rook step is ready.
 - Both presenters have read the whole notes PDF, not only their own half.
 
 What the grading rubric asks for, and where the deck answers it.

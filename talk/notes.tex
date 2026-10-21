@@ -236,12 +236,63 @@ bishops that are stuck above the pawn diagonal. Each line here stands for a para
 \source{[EHP17] pages 15 to 17.}
 
 \slide{Live demo}{Andrew}{3:30}
-\screen{The browser, light theme, 16:9. The slide says the app is ours and not part of the papers.}
-\say{This is our own implementation, written for this presentation. It plays white's strategy from the paper
-on the compact version of the position from Section 4 and shows the value live. Follow the shot list in
-\texttt{demo/shots.md}: new game, hint, key bishop to three towers, read the value, rook up, open a cannon, fire
-and attack, watch b and g count down while white answers each threat.}
-\source{Supplementary material; \url{https://github.com/sean-reid/infinite-chess}.}
+\screen{The browser at 16:9, light theme, \url{https://infinite-chess.dwainosaur.com}. The slide says the app is
+ours and not part of the papers.}
+\say{This is our own implementation, written for this presentation. It plays white's strategy from the paper on
+the compact version of the position from Section 4 and shows the value live.}
+\takeaway{Each kind of black announcement moves one term of the ordinal, and white gets a free move only when
+black opens a cannon.}
+
+The readings below come from the engine on release 0.3.0. Walk the steps once before recording and update any
+that differ. Read the value aloud each time it changes and say which term moved.
+
+\textbf{Part one, from a fresh game.}
+\begin{enumerate}
+  \item Click New game. The panel reads $\omega^4$. Say: four nested announcements still to come.
+  \item Click Hint. The key bishop lights up, its square is ringed, and buttons list landings: 1 for one tower,
+    3 for two towers, 6 for three, and so on. Say: any distance is on the main line; every three squares is one
+    more tower.
+  \item Click the button \texttt{3 2 towers}. White captures at once. The panel reads
+    $\omega^3\cdot 2+\omega^2\cdot 12$, with $r=2$ and $h=12$. Say: black announced $r$; $h$ is how many free
+    moves white needs in this tower.
+  \item Click Hint. The front bishop of cannon 1 lights up with landings 10 for wing 1, 18 for wing 2, and so on.
+    Click \texttt{10 wing 1}. The panel reads $\omega^3\cdot 2+\omega^2\cdot 12+\omega+2$. Say: opening a cannon
+    raised $b$ and $g$.
+  \item White replies ``climbing the inner wall'' and the panel reads $\omega^3\cdot 2+\omega^2\cdot 11+\omega+2$.
+    Say: that was white's one free move; $h$ went from 12 to 11. Opening a cannon is the only time white gets one.
+  \item Click Hint, then the Move to button. The bishop attacks gate 1 of wing 1. White answers ``answering wing 1
+    gate 1'' and the panel reads $\omega^3\cdot 2+\omega^2\cdot 11+\omega+1$. Say: $g$ dropped by one and nothing
+    else moved; that is a forced reply.
+  \item Click Hint, then the Move to button: the bishop takes the door pawn. The panel's $g$ shows ``open'' and
+    the value reads $\omega^3\cdot 2+\omega^2\cdot 11+\omega\cdot 2$. Say: the bishop is in the doorway; white's
+    guard settles in behind it.
+  \item Click Hint. Shooter 1 of cannon 1 lights up with landings for fresh wings. Click \texttt{19 wing 2}.
+    White replies ``shoring up cannon 1'' and the panel reads $\omega^3\cdot 2+\omega^2\cdot 11+7$, with $b=0$
+    and $g=7$. Say: $b$ went to zero and $g$ jumped; the shot bought seven more forced replies.
+  \item Click Hint and play two or three of the pawn steps. Each lowers $g$ by one while white keeps ``shoring
+    up cannon 1''. Say: every black move here costs white a move; $h$ has not moved since step 5.
+\end{enumerate}
+
+\textbf{Part two, the rook step.} Open \href{https://infinite-chess.dwainosaur.com/\#g=zZJPSNNhGMef7\_f3bqPcCh1RnWaR\_YE2Ak-ydSiw2urWQZPqYhAUFQX25xBkMrc8LCFizToUJrRahQc1sOwQzCZpmXWwPKVQpEU0vHWIEbbe-P2kP2vt9Ht-vM\_z\_X6-z\_vubrDb9-0F7R63W0QoUl7hWU6IKCUCrJKqqvUu4eq1gm\_nc99cD7hmRXlFjS1Xlzldi\_JzO8qqqwMrQRFP5Ub\_j-d63wFbbe0xt3DLNnP9rZs8lfuXms3rOlFIXV07XML6BnOlXTs9lafWzaekK96Bq7Exhg2kiNd35NCvTOoKT-BoanqBJcLjJ82ZThz1-rpQ8zvSusV7IIIIPmOxMIo2mNucQwu8vj5s\_xOjn\_ZMlUAC7Vwg7MAVC8PLuAivL4M9f2OoG6dY1olOnOHm3IX4A924i0Ko6y5DtPWgB8\_pFvbinkW8PnTDH8jiYCEBdJB3lEEM4hNdwscYsgDJ4BH8gTBP\_wsQHajVsI9jHDHDIXyFCQug13gJfyDO8wW9m\_nJrhvOaUwjZUA4g48WZB\_wFv5AkteKQqYTpg1bFlnEjPrc2w2GWtjMYlLoNFOGhBnmjOEStjJK831F2MxgaJS3i7ovc-Kzyh5nnG3KIbzEDgviBC8wGJrkw\_9KrJNfVc4kk7yhILzJlAX5LXYxGJrlaEmQ6wkGVEU\_-5lWSnifAxYJHrCPwVDEmCypBHqSCbVsmMOcUguFI3xmkeQpMwyGEsZsSSbRE31Raoxj7FWHhW-YZu4HoozvtR2Yq0UR-Z58v2g1-BU}{the prepared link}, which loads the same game 606 plies in
+(move 304), with cannon 12 spent and the first rook under attack. Say what it is: the same game, far along, saved
+as a link.
+\begin{enumerate}
+  \setcounter{enumi}{9}
+  \item The panel reads $\omega^3\cdot 2+\omega$, with $h=0$. Say: white has finished this tower's free moves;
+    the next thing to happen is the second kind of announcement.
+  \item Click Hint. The rook at $(47,57)$ lights up with an upward open line and the form prefilled. Type 5 and
+    click Move. The panel reads $\omega^3\cdot 2+\omega^2\cdot 14+\omega$, with $h=14$. Say: black announced $h$;
+    the higher the rook, the more pawn moves white needs.
+  \item White captures the rook and the panel reads $\omega^3+\omega^2\cdot 13+\omega$, with $r=1$. Say: the
+    tower is spent, $r$ dropped to 1, and the whole cycle starts again with one tower left.
+\end{enumerate}
+
+\textbf{If the app misbehaves.} If the panel does not update after white's move, wait two seconds; white runs in
+a background worker and replays the game each move. If a reading differs from this list by one in $g$ or $b$,
+carry on; say the term and the direction, not the number. If the link fails to load, play part one only and
+describe the rook step from slide 17. Undo exists; use it if a click lands on the wrong square.
+\source{Supplementary material; \url{https://github.com/sean-reid/infinite-chess}. The link above is the game's
+move list in the URL; regenerate it from the engine if white's strategy changes.}
 
 \slide{The compact battery}{Andrew}{0:40}
 \screen{Figure 6 of [EHP17].}
