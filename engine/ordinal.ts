@@ -1,6 +1,6 @@
 import { Race } from "./bishops.ts";
 import { MATING_BISHOP, cannonSquare, gateSquare, towerSquare } from "./geometry.ts";
-import { freshGates, lastShot, wingOfHallway } from "./mainline.ts";
+import { unusedGates, lastShot, wingOfHallway } from "./mainline.ts";
 import { legalReach } from "./moves.ts";
 import { colorOf } from "./pieces.ts";
 import type { Position } from "./position.ts";
@@ -119,9 +119,9 @@ export function gameValue(pos: Position): GameValue {
     value.g = "open";
     return value;
   }
-  let g = pawnStepsLeft(pos, shot.n, shot.k) + freshGates(pos, w).length;
+  let g = pawnStepsLeft(pos, shot.n, shot.k) + unusedGates(pos, w).length;
   for (let k = 0; k < w; k++) if (pos.atSquare(gateSquare(w, k, 2, -3)) === "P") g += 1;
-  if (g > 0 && pos.atSquare(gateSquare(w, 0, 2, -3)) !== "P" && freshGates(pos, w).length === 0)
+  if (g > 0 && pos.atSquare(gateSquare(w, 0, 2, -3)) !== "P" && unusedGates(pos, w).length === 0)
     g = pawnStepsLeft(pos, shot.n, shot.k);
   value.g = g;
   value.offLine = activeTower(pos, tw) === null;

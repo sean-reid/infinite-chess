@@ -113,7 +113,7 @@ async function openFromLocation(): Promise<void> {
         status.textContent =
           "That link did not fully load; the game starts where it stopped making sense.";
     } else if (openedOnLink()) {
-      status.textContent = "That link did not decode. Starting fresh.";
+      status.textContent = "That link did not decode. Starting a new game.";
       freezeStorage(0);
       game.restart();
     } else {

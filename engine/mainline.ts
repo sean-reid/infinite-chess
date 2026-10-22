@@ -62,7 +62,7 @@ export function wingOfHallway(s: Square): number | null {
 }
 
 // Gates of wing w whose guard has not been summoned yet, bottom first.
-export function freshGates(pos: Position, w: number): number[] {
+export function unusedGates(pos: Position, w: number): number[] {
   const out: number[] = [];
   for (let k = 0; k < w; k++) {
     const g = wingGuard(w, k);
@@ -108,9 +108,9 @@ function pawnThreat(pos: Position, n: number, k: number): Move | null {
   return null;
 }
 
-// Fires `from` down its exit diagonal at the smallest untouched wing it can
+// Fires `from` down its exit diagonal at the smallest unused wing it can
 // reach. One ray walk decides how far the bishop can go at all.
-function fireAtFreshWing(
+function fireAtUnusedWing(
   pos: Position,
   from: Square,
   touched: Set<number>,
@@ -159,7 +159,7 @@ export function mainLine(pos: Position): Hint {
     }
     const w = wingOfHallway(shot.square);
     if (w !== null && pos.atSquare(shot.square) === "b") {
-      for (const k of freshGates(pos, w)) {
+      for (const k of unusedGates(pos, w)) {
         const attack = gateSquare(w, k, 0, -5);
         const m = { from: shot.square, to: attack };
         if (isLegal(pos, m)) {
@@ -186,12 +186,12 @@ export function mainLine(pos: Position): Hint {
     for (let k = 1; k <= shot.n; k++) {
       const from = cannonSquare(shot.n, k, k);
       if (pos.atSquare(from) !== "b") continue;
-      const m = fireAtFreshWing(pos, from, touched);
+      const m = fireAtUnusedWing(pos, from, touched);
       if (m) {
         return {
           move: m,
           open: null,
-          text: `Fire shooter ${k} of cannon ${shot.n} at a fresh wing. The pawn behind it makes this a threat white must answer.`,
+          text: `Fire shooter ${k} of cannon ${shot.n} at an unused wing. The pawn behind it makes this a threat white must answer.`,
         };
       }
     }
@@ -200,12 +200,12 @@ export function mainLine(pos: Position): Hint {
   for (let n = 1; n <= 400; n++) {
     const front = cannonFront(n);
     if (pos.atSquare(front) !== "b") continue;
-    const m = fireAtFreshWing(pos, front, touched);
+    const m = fireAtUnusedWing(pos, front, touched);
     if (m) {
       return {
         move: m,
         open: null,
-        text: `Open cannon ${n} by sending its front bishop out to a fresh wing. White gets one free move for this, then ${n} forced replies.`,
+        text: `Open cannon ${n} by sending its front bishop out to an unused wing. White gets one free move for this, then ${n} forced replies.`,
       };
     }
   }
