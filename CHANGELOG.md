@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.4.0...infinite-chess-v0.5.0) (2026-10-22)
+
+
+### Features
+
+* **talk:** replace the live demo with five stills of the value changing move by move ([#51](https://github.com/sean-reid/infinite-chess/issues/51)) ([781a8b4](https://github.com/sean-reid/infinite-chess/commit/781a8b46981c02dfbf24f85f736f2cd0511adc5c))
+
+
+### Bug Fixes
+
+* say unused wing in the hints and new game in the link message ([#53](https://github.com/sean-reid/infinite-chess/issues/53)) ([4e8767c](https://github.com/sean-reid/infinite-chess/commit/4e8767cdf7843a768bb8b6d1933d79a50aefc737))
+
 ## [0.4.0](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.3.0...infinite-chess-v0.4.0) (2026-10-21)
 
 
