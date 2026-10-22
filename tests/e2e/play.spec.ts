@@ -133,12 +133,12 @@ test("a game survives a reload and a link restores it", async ({ page, context }
   await expect(page.locator("#movelist li")).toHaveCount(1);
   await page.getByRole("button", { name: "Undo" }).click();
   await expect(page.locator("#movelist li")).toHaveCount(0);
-  const fresh = await context.newPage();
-  await fresh.goto("/#g=46.45-57.56;58.55-57.56");
-  await expect(fresh.locator("#movelist li").first()).toContainText("P (58,55)×(57,56)");
-  fresh.once("dialog", (d) => d.accept());
-  await fresh.getByRole("button", { name: "Resign" }).click();
-  await expect(fresh.locator("#stats")).toContainText("1 finished");
+  const second = await context.newPage();
+  await second.goto("/#g=46.45-57.56;58.55-57.56");
+  await expect(second.locator("#movelist li").first()).toContainText("P (58,55)×(57,56)");
+  second.once("dialog", (d) => d.accept());
+  await second.getByRole("button", { name: "Resign" }).click();
+  await expect(second.locator("#stats")).toContainText("1 finished");
 });
 
 test("selecting a piece never moves the view", async ({ page }) => {
