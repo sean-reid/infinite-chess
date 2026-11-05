@@ -42,7 +42,7 @@ last rank, so pawns never promote. You win by checkmate, which happens at a defi
 ends is a draw, and we drop the fifty-move and repetition rules, which only exist to force finite games.
 Positions may have infinitely many pieces, as long as a rule says what is on each square. We assume you know
 how the pieces move and nothing more.}
-\source{[EH14] Section 1 and footnotes on pages 4 and 5; [EHP17] Section 2, page 4.}
+\source{[EH14] pages 2 to 4; [EHP17] Section 2, page 4.}
 
 \slide{Open games}{Sean}{1:30}
 \screen{The definition of an open game.}
@@ -52,7 +52,7 @@ single position, and the same for black. A draw by infinite play is never settle
 why we will assign numbers from white's point of view and treat black separately. Everything I say next is
 about open games in general. Chess is just where the examples come from.}
 \takeaway{Open means a win shows up at a finite stage.}
-\source{[EHP17] Section 2, first paragraph; [EH14] Section 2.}
+\source{[EHP17] Section 2, page 3; [EH14] Section 1, page 4.}
 
 \slide{Counting past the natural numbers}{Sean}{2:30}
 \screen{The sequence of ordinals and the one fact.}
@@ -66,7 +66,7 @@ infinite strictly decreasing sequence of ordinals. The reason is that any nonemp
 least member, and a decreasing sequence would have no least member. Hold on to that fact; every proof today
 rests on it.}
 \takeaway{No infinite descent.}
-\source{Standard; stated in [EH14] Section 2, page 5.}
+\source{Standard; stated in [EH14] Section 1, page 5.}
 
 \slide{A countdown game}{Sean}{2:00}
 \screen{The table of starting ordinals and what black gets to do. The slide says this is our device.}
@@ -78,7 +78,7 @@ Start at omega times two and black gets to name a number twice. Start at omega s
 times he will later get to name a number. White always wins by the no-descent fact. The ordinal measures how
 much control black has over the length.}
 \takeaway{The ordinal is a budget of announcements.}
-\source{Our device. The announcement reading of values is [EH14] Section 2, page 5, and [EHP17] Section 2, page 5.}
+\source{Our device. The announcement reading of values is [EH14] Section 1, pages 5 to 7, and [EHP17] Section 2, pages 4 and 5.}
 
 \slide{Game value: the definition}{Sean}{2:00}
 \screen{The three clauses of the definition.}
@@ -90,7 +90,7 @@ to be covered. The valuation is the least assignment obeying these clauses, and 
 Finite value n is mate in n. Value omega means white wins and black's first move picks a natural number n with
 the game lasting at least n more white moves. That is the countdown game inside chess.}
 \takeaway{White: some move. Black: every move. Value is a supremum at black's turns.}
-\source{[EH14] Definition 1, pages 4 and 5; [EHP17] Section 2, page 4.}
+\source{[EH14] Definition 1, pages 4 and 5; [EHP17] Section 2, page 3.}
 
 \slide{The fundamental observation}{Sean}{1:40}
 \screen{Theorem and the first half of the proof.}
@@ -100,7 +100,7 @@ value, which by the successor clause is one less. Black, by the supremum clause,
 value or to an unvalued position. So the values strictly decrease along the play, and by no-descent the play
 reaches zero, which is a win.}
 \takeaway{Reducing value is a winning strategy because the ordinals have no infinite descent.}
-\source{[EH14] Section 2, page 5; [EHP17] Section 2, page 4.}
+\source{[EH14] Section 1, page 5; [EHP17] Section 2, pages 3 and 4.}
 
 \slide{The fundamental observation, continued}{Sean}{1:20}
 \screen{The second half of the proof and the Gale and Stewart line.}
@@ -112,7 +112,7 @@ valued positions are exactly the ones white can force to a win, and the same hol
 Historically this argument is the proof of the Gale and Stewart theorem that open games are determined; we
 only state that.}
 \takeaway{Value exists if and only if white can force a win.}
-\source{[EH14] Section 2, page 5; [EHP17] Section 2, page 4.}
+\source{[EH14] Section 1, page 5; [EHP17] Section 2, pages 3 and 4.}
 
 \slide{Worked example: value omega}{Sean}{2:30}
 \screen{Figure 3 of [EH14] and the main line.}
@@ -136,7 +136,7 @@ black's free rook on the right checks the white king from a distance k of black'
 toward it for k moves before black must retreat and white can advance again. So black announces n, the number
 of rounds, and in each round announces k. That is omega squared.}
 \takeaway{Announce how many announcements: omega squared.}
-\source{[EH14] Figure 7 and pages 13 to 15.}
+\source{[EH14] Figure 7 and pages 14 and 15.}
 
 \slide{From omega squared to omega cubed}{Sean}{1:30}
 \screen{Figure 10 of [EH14].}
@@ -145,7 +145,7 @@ before it is captured. Each tower is a copy of the previous position: a rook tha
 marches, and the harassing rook on the left. The towers are consumed right to left. k towers give at least omega
 squared times k, k is unbounded, so the value is omega cubed. Keep this picture; the omega to the fourth
 position is this one with the harassing rook replaced by something stronger.}
-\source{[EH14] Figure 10 and pages 17 to 19.}
+\source{[EH14] Figure 10 and pages 17 to 20.}
 
 \slide{What the 2014 paper proves and asks}{Sean}{1:30}
 \screen{The list of results with their labels.}
@@ -200,7 +200,7 @@ attack square, each of which threatens a door pawn. If white ignores the threat,
 and reaches the throne room three moves ahead of the guard, which mates by the lemma. So white must move the
 guard one step, after which it follows two behind, which the lemma says is enough. A wing of length n gives
 n plus one forced replies: the count g.}
-\source{[EHP17] Figure 4 and pages 10 and 11.}
+\source{[EHP17] Figure 4 and pages 11 and 12.}
 
 \slide{A bishop cannon}{Andrew}{1:30}
 \screen{Figure 5 of [EHP17].}
@@ -208,7 +208,7 @@ n plus one forced replies: the count g.}
 that white must meet, so each shot is a forced reply, and the fired bishop lands in a wing no bishop has used and spends g
 more forced replies there. Opening a cannon costs black one tempo, which is white's only free move, and buys
 n shots: the count b. The cannons grow along the battery, so black can always open a bigger one.}
-\source{[EHP17] Figure 5 and pages 11 to 13.}
+\source{[EHP17] Figure 5 and pages 12 to 14.}
 
 \slide{The value of a main-line position}{Andrew}{2:00}
 \screen{The ordinal with four terms and the three rules.}
@@ -218,7 +218,7 @@ attack lowers g. A shot lowers b and raises g by a lot. Opening a cannon raises 
 free move, which lowers h. When h reaches zero the next tower starts, so r drops and black picks a new h. Black
 can never raise a leading term, and white lowers one whenever black runs out of forced replies. The paper's
 analysis of this is careful but written informally, so we label it a sketch.}
-\source{[EHP17] Section 3, pages 13 to 15.}
+\source{[EHP17] Section 3, pages 15 and 16.}
 
 \slide{The value, move by move}{Andrew}{0:20}
 \screen{The supplementary label and the app's address.}
@@ -266,13 +266,13 @@ answers as before. Wild rook moves in distant towers can be ignored a fixed frac
 less than the forced replies they replace. Exiting a gateway with the guard two behind loses the race. And white
 cannot shortcut either: no bishop escapes the towers early, and capturing more pawns to the right only frees
 bishops that are stuck above the pawn diagonal. Each line here stands for a paragraph of the paper.}
-\source{[EHP17] pages 15 to 17.}
+\source{[EHP17] pages 16 to 20.}
 
 \slide{The compact battery}{Andrew}{0:40}
 \screen{Figure 6 of [EHP17].}
 \say{Section 4 folds the battery onto a quarter plane with a vertical wall. Same gateways, same value formula,
 and a free quarter plane left over for bigger constructions. The demo uses this version.}
-\source{[EHP17] Section 4, pages 21 and 22.}
+\source{[EHP17] Section 4, pages 20 and 21.}
 
 \slide{Summary}{Andrew}{1:00}
 \screen{Four lines with labels.}
