@@ -145,7 +145,7 @@ an ordinal, white steps a successor down by one, black chooses any smaller ordin
 induction gives it value $\alpha$.
 \end{example}
 
-\begin{proposition}[Values as announcements; \EH{pp.\,5--7}, \EHP{pp.\,4--5}]\label{prop:announce}
+\begin{remark}[Values as announcements; \EH{pp.\,5--7}, \EHP{pp.\,4--5}]\label{prop:announce}
 Play from value $\alpha$ is a countdown from $\alpha$: white lowers the value by exactly one at each of his
 moves, and black must choose a smaller ordinal at each limit. With black to move, a value of at least
 $\omega$ lets black \emph{announce} a number $n$, a lower bound on the length of the remaining play;
@@ -155,7 +155,7 @@ announcement}, the number of large announcements to follow; $\omega^4$, make a \
 number of huge announcements. From $\omega^4$ black might play to
 $\omega^3\cdot 5+\omega^2\cdot 17+\omega\cdot 34+1234$: a meta-announcement of $6$, a huge announcement of
 $18$, a large announcement of $35$, and $1234$ moves before the next announcement \EHP{p.\,5}.
-\end{proposition}
+\end{remark}
 
 \section{Positions of value \texorpdfstring{$\omega$, $\omega^2$ and $\omega^3$}{omega, omega squared and omega cubed}}
 
@@ -225,8 +225,10 @@ There is a position in infinite chess with game value $\omega^4$. The position i
 infinitely many pieces.
 \end{theorem}
 
-The previous records were $\omega^3$ and $\omega^3\cdot 4$ \EHP{p.\,1}. The proof is the construction and
-analysis of 5.2 to 5.8, carried out in prose in the paper; we mark it a sketch throughout.
+\begin{sketch}
+The previous records were $\omega^3$ and $\omega^3\cdot 4$ \EHP{p.\,1}. The proof is the construction of 5.2 to
+5.6 and the analysis of 5.7 and 5.8, carried out in prose in the paper.
+\end{sketch}
 
 \begin{construction}[The position; \EHP{Figure 1, pp.\,5--7}]\label{con:position}
 Black to move. Three components: the \emph{rook tower block} in the northeast, adapted from Figure~10 of
@@ -304,9 +306,10 @@ too slow to carry force, associate
 \]
 with $r$ the towers not yet activated, $h$ the white moves left in the current tower up to the attack on the
 next rook, $b$ the capped bishops left in the active cannon, and $g$ the forced-reply threats left to the
-current bishop in its wing. A gateway attack lowers $g$ by one. At $g=0$ a shot lowers $b$ by one and makes
-$g$ as large as black likes. At $b=0$ opening a cannon lets white lower $h$ by one and then makes $b$ as large
-as black likes. At $h=0$ the next tower activates, $r$ falls by one and the rook lift sets $h$. So the main
+current bishop in its wing. A gateway attack lowers $g$ by one. When $g$ reaches $0$ black fires the next shot, which lowers $b$ by one
+and makes $g$ as large as black likes. When $b$ reaches $0$ black opens a new cannon, which lets white lower
+$h$ by one and then makes $b$ as large as black likes. When $h$ reaches $0$ the next tower activates, $r$
+falls by one and the rook lift sets $h$. So the main
 line is a countdown from $\omega^4$ in the sense of Proposition~\ref{prop:announce}, and if neither side
 gains by deviating these ordinals are the game values.
 \end{proposition}
@@ -373,12 +376,12 @@ $\Sigma_1$-boundedness in $L_{\omega_1^{\CK}}$.
 
 \begin{conjecture}[\EH{Conjecture 5, p.\,21}]
 $\omega_1^{\Ch}=\omega_1^{\Ch,c}=\omega_1^{\Ch,\mathrm{hyp}}=\omega_1^{\CK}$ and $\bomega_1^{\Ch}=\omega_1$.
-The best finite lower bound known is $\omega$ (Proposition~\ref{prop:omega}); answers to Wästlund's
-MathOverflow question reach $\omega\cdot n$. The computable infinite positions give
+The best finite lower bound in the paper is $\omega$ (Proposition~\ref{prop:omega}); answers to Wästlund's
+MathOverflow question claim $\omega\cdot n$. The computable infinite positions give
 $\omega^3<\omega_1^{\Ch,c}$ [EH14] and $\omega^4<\omega_1^{\Ch,c}$ [EHP17].
 \end{conjecture}
 
-\begin{theorem}[\EH{Theorem 10, p.\,28; Corollary 12, p.\,35}]
+\begin{theorem}[\EH{Theorem 10, p.\,28; Corollary 12, p.\,35}]\label{thm:threed}
 Every countable ordinal is the value of a position in infinite three-dimensional chess, so
 $\bomega_1^{\Ch_3}=\omega_1$; every computable ordinal is the value of a computable position, so
 $\omega_1^{\Ch_3,c}=\omega_1^{\CK}$.
@@ -387,14 +390,14 @@ $\omega_1^{\Ch_3,c}=\omega_1^{\CK}$.
 
 The idea: for a well-founded tree $T\subseteq\omega^{<\omega}$, the game in which black climbs through $T$
 and loses on reaching a leaf has value equal to the rank of $T$, since the two recursions coincide
-(Lemma~11); every countable ordinal is such a rank; and the paper embeds this game in three-dimensional chess
+\EH{Lemma 11}; every countable ordinal is such a rank; and the paper embeds this game in three-dimensional chess
 with kings, pawns and bishops.
 
 \paragraph{Open problems.}
 (1) Is there a finite position with value $\omega^2$? None is known; [EH14, p.\,21] suggests an inefficient
 mating net that black can push far away. (2) Is $\omega^4$ the largest value in two dimensions? The
 $\omega^5$ idea of Remark~\ref{rem:compact} has no position behind it. (3) Is $\bomega_1^{\Ch}=\omega_1$
-in two dimensions? The authors tried to embed trees as in Theorem~6.4 and found the plane too cramped
+in two dimensions? The authors tried to embed trees as in Theorem~\ref{thm:threed} and found the plane too cramped
 (p.\,21).
 
 \paragraph{Supplementary material.}
@@ -411,7 +414,8 @@ to illustrate the countdown; nothing in these notes depends on it.
   \item[Announcement] Black's move at a limit stage, choosing a smaller ordinal; large, huge and meta
     announcements are the choices at $\omega^2$, $\omega^3$ and $\omega^4$.
   \item[Forced reply] A black move white must answer at once or be mated.
-  \item[Door, portcullis] A pawn whose advance releases white's mating material.
+  \item[Portcullis] A pawn whose advance releases white's mating material.
+  \item[Door pawn] The pawn a black bishop attacks, and captures to exit, in a gateway wing.
   \item[Key pawn, lock pawn] The white pawn whose advance activates a tower, and the black pawn guarding it.
   \item[Rook tower] One unit of white's main attack: guard pawn, rook, pawn column, bishops.
   \item[Throne room] The locked chamber holding both kings in the $\omega^4$ position.
