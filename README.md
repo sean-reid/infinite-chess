@@ -21,4 +21,4 @@ One Cloudflare Worker serves the page from the asset store and answers `/api/hea
 
 ## The talk
 
-Slides and speaker notes for a class presentation on the two papers live in `talk/`, with their own [README](talk/README.md). Built PDFs are attached to each release.
+Slides, a speaker script and reference notes for a class presentation on the two papers live in `talk/`, with their own [README](talk/README.md). Built PDFs are attached to each release.
