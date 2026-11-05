@@ -1,0 +1,24 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{paperfonts}[2026/11/04 Source Serif 4 and JetBrains Mono from fonts/]
+
+\RequirePackage{amsmath}
+\RequirePackage{fontspec}
+\RequirePackage{unicode-math}
+
+\setmainfont{SourceSerif4}[
+  Path=fonts/,
+  Extension=.otf,
+  UprightFont=*-Regular,
+  BoldFont=*-Semibold,
+  ItalicFont=*-It,
+  BoldItalicFont=*-SemiboldIt,
+  Numbers=Proportional,
+]
+\setmonofont{JetBrainsMono}[
+  Path=fonts/,
+  Extension=.ttf,
+  UprightFont=*-Regular,
+  BoldFont=*-Medium,
+  Scale=MatchLowercase,
+]
+\setmathfont{Latin Modern Math}

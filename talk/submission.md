@@ -22,7 +22,7 @@ From Evans, Hamkins and Perlmutter (2017): Theorem 1 and Section 3, the position
 
 ## Supplementary material
 
-Infinite chess, a browser game by Sean Reid that implements the Section 4 compact position of the 2017 paper and white's strategy from it, and shows the game value live. Release 0.3.0 of 21 October 2026. https://infinite-chess.dwainosaur.com and https://github.com/sean-reid/infinite-chess. Used only for the live demonstration; it is our own unpublished work and is labelled as such in the video. The slides and speaker notes are in the same repository under talk/ and attached to the release as PDFs.
+Infinite chess, a browser game by Sean Reid that implements the Section 4 compact position of the 2017 paper and white's strategy from it, and shows the game value live. Release 0.3.0 of 21 October 2026. https://infinite-chess.dwainosaur.com and https://github.com/sean-reid/infinite-chess. Used only for the live demonstration; it is our own unpublished work and is labelled as such in the video. The slides, the speaker script and a set of reference notes on the two papers are in the same repository under talk/ and attached to the release as PDFs.
 
 ## Credits
 

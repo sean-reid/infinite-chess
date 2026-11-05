@@ -1,9 +1,9 @@
 # The talk
 
-Slides and speaker notes for a class presentation on the two Integers papers the app is built from.
+Slides, a speaker script and reference notes for a class presentation on the two Integers papers the app is built from.
 
 ```sh
-make -C talk            # talk/build/slides.pdf and talk/build/notes.pdf
+make -C talk            # slides.pdf, script.pdf and notes.pdf under talk/build/
 make -C talk figures    # only the board diagrams, into talk/build/figures/
 make -C talk clean
 ```
@@ -14,4 +14,4 @@ file names its source. Source Serif 4 and JetBrains Mono in `fonts/` are under t
 
 `submission.md` is the Canvas text and `checklist.md` the recording list. The stills in `figures/demo` come from `demo/shots.mjs`, which plays the demo line against the deployed app; `make -C talk stills` regenerates them.
 
-CI builds both PDFs on every change under `talk/` and attaches them to each GitHub release.
+CI builds the three PDFs on every change under `talk/` and attaches them to each GitHub release.
