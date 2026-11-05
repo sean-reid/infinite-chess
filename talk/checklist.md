@@ -2,9 +2,9 @@
 
 Before recording.
 
-- Build the current release's slides.pdf and notes.pdf, or download them from the release. Open the slides in a viewer at 16:9 with no toolbar.
-- If the app has changed since the stills were made, run `make -C talk stills` and check the readings in the notes still match.
-- Both presenters have read the whole notes PDF, not only their own half.
+- Build the current release's slides.pdf and script.pdf, or download them from the release. Open the slides in a viewer at 16:9 with no toolbar.
+- If the app has changed since the stills were made, run `make -C talk stills` and check the readings in the script still match.
+- Both presenters have read the whole script PDF, not only their own half.
 
 What the grading rubric asks for, and where the deck answers it.
 
@@ -21,9 +21,9 @@ What the grading rubric asks for, and where the deck answers it.
 
 While recording.
 
-- Say the slide's takeaway sentence from the notes before moving on.
+- Say the slide's takeaway sentence from the script before moving on.
 - Name the paper and figure number when a diagram comes up.
-- Keep each slide near its target time; the notes total 25 minutes.
+- Keep each slide near its target time; the script totals 25 minutes.
 - On the move-by-move slides, read the value aloud and say which term moved.
 
 After recording.

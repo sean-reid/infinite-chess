@@ -1,18 +1,5 @@
 \documentclass[11pt]{article}
-\usepackage[a4paper,margin=2.4cm]{geometry}
-\usepackage{fontspec}
-\usepackage{unicode-math}
-\usepackage{xcolor}
-\usepackage{booktabs}
-\usepackage{hyperref}
-\setmainfont{SourceSerif4}[Path=fonts/,Extension=.otf,UprightFont=*-Regular,BoldFont=*-Semibold,ItalicFont=*-It,BoldItalicFont=*-SemiboldIt]
-\setmonofont{JetBrainsMono}[Path=fonts/,Extension=.ttf,UprightFont=*-Regular,Scale=MatchLowercase]
-\setmathfont{Latin Modern Math}
-\definecolor{accent}{HTML}{B3301B}
-\definecolor{inksoft}{HTML}{625C51}
-\hypersetup{colorlinks,urlcolor=accent,linkcolor=black}
-\setlength{\parskip}{0.5em}
-\setlength{\parindent}{0pt}
+\usepackage{theme/paperarticle}
 
 \newcounter{slide}
 \newcommand{\slide}[3]{\stepcounter{slide}\subsection*{Slide \theslide: #1}{\color{inksoft}\small #2 \textperiodcentered\ #3}\par\vskip 0.3em}
@@ -21,7 +8,7 @@
 \newcommand{\takeaway}[1]{\textbf{Takeaway.} #1\par}
 \newcommand{\source}[1]{{\color{inksoft}\small Source: #1}\par}
 
-\title{Speaker notes: transfinite game values in infinite chess}
+\title{Speaker script: transfinite game values in infinite chess}
 \author{Sean Reid and Andrew Shargel}
 \date{Draft of 21 October 2026}
 
@@ -168,7 +155,7 @@ state: for finite positions the values are below the Church Kleene ordinal, and 
 omega one. They conjecture these bounds are sharp. In three-dimensional infinite chess they prove every
 countable ordinal occurs. Before 2015 the record in ordinary infinite chess was omega cubed. Andrew will show
 you omega to the fourth.}
-\source{[EH14] Theorem 4 page 10, Conjecture 5 page 26, Theorem 10 page 32; [EHP17] Section 1, page 2.}
+\source{[EH14] Theorem 4 page 10, Conjecture 5 page 21, Theorem 10 page 28; [EHP17] Section 1, page 2.}
 
 \section*{Part B: the position with value omega to the fourth}
 
