@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.5.0...infinite-chess-v0.6.0) (2026-11-05)
+
+
+### Features
+
+* **talk:** add reference notes on the two papers ([#60](https://github.com/sean-reid/infinite-chess/issues/60)) ([c6ef295](https://github.com/sean-reid/infinite-chess/commit/c6ef2956a2c97d095428e0e3e3694f3bb18baf52))
+
+
+### Dependencies
+
+* bump wrangler to 4.157 and the dev dependencies dependabot proposed ([#61](https://github.com/sean-reid/infinite-chess/issues/61)) ([db65cdb](https://github.com/sean-reid/infinite-chess/commit/db65cdb2f7a6d186ba4adb9b77e49ddfa526f1ad))
+
 ## [0.5.0](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.4.0...infinite-chess-v0.5.0) (2026-10-22)
 
 
