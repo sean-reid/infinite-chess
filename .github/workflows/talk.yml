@@ -31,6 +31,7 @@ jobs:
           path: |
             talk/build/slides.pdf
             talk/build/script.pdf
+            talk/build/notes.pdf
 
   attach:
     if: github.event_name == 'workflow_dispatch'
@@ -43,7 +44,7 @@ jobs:
         with:
           name: talk
           path: pdfs
-      - run: gh release upload "$TAG" pdfs/slides.pdf pdfs/script.pdf --clobber --repo "$GITHUB_REPOSITORY"
+      - run: gh release upload "$TAG" pdfs/slides.pdf pdfs/script.pdf pdfs/notes.pdf --clobber --repo "$GITHUB_REPOSITORY"
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}

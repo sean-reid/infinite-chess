@@ -4,7 +4,7 @@ Before recording.
 
 - Build the current release's slides.pdf and script.pdf, or download them from the release. Open the slides in a viewer at 16:9 with no toolbar.
 - If the app has changed since the stills were made, run `make -C talk stills` and check the readings in the script still match.
-- Both presenters have read the whole script PDF, not only their own half.
+- Both presenters have read the whole script and the reference notes, not only their own half.
 
 What the grading rubric asks for, and where the deck answers it.
 

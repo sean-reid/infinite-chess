@@ -1,0 +1,438 @@
+\documentclass[10pt]{article}
+\usepackage{theme/paperarticle}
+\geometry{margin=2cm}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{1.1em}{0.35em}
+\titlespacing*{\paragraph}{0pt}{0.6em}{0.6em}
+
+\setlist{nosep,leftmargin=*}
+\setlength{\columnsep}{1.6em}
+\setlength{\parskip}{0.4em}
+
+\newtheoremstyle{notes}{0.5em}{0.3em}{}{}{\bfseries}{.}{0.5em}{\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+\theoremstyle{notes}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{construction}[theorem]{Construction}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{remark}[theorem]{Remark}
+
+\newenvironment{sketch}{\begin{proof}[Sketch]\renewcommand{\qedsymbol}{}}{\end{proof}}
+\newcommand{\stated}{\par\noindent\emph{Stated without proof.}\par}
+\newcommand{\EH}[1]{[EH14, #1]}
+\newcommand{\EHP}[1]{[EHP17, #1]}
+\newcommand{\bomega}{\symbfit{\omega}}
+\newcommand{\Ch}{\mathrm{Ch}}
+\newcommand{\CK}{\mathrm{CK}}
+
+\title{Transfinite game values in infinite chess\\[0.3em]
+  \large Reference notes on two papers by Evans, Hamkins and Perlmutter}
+\author{Sean Reid and Andrew Shargel}
+\date{Draft of 4 November 2026}
+
+\begin{document}
+\maketitle
+\vspace{-1.8em}
+
+The definitions, results and constructions behind our presentation, arranged by topic rather than in the
+order of the slides. [EH14] and [EHP17] are the two papers in the references; page numbers refer to the
+published PDFs. Every result ends with a \emph{proof}, which is complete; a \emph{sketch}, which gives the
+structure of the argument and says what is left out; or the words \emph{stated without proof}. The numbering
+is ours; the papers' labels follow each heading.
+
+\section{Infinite chess and open games}
+
+\begin{definition}[Infinite chess; \EH{Section 1, pp.\,2--3}, \EHP{Section 2, p.\,4}]
+Chess on $\mathbb{Z}\times\mathbb{Z}$ with the usual pieces and moves. There is no edge, so no promotion,
+castling or en passant. White wins by checkmating black. A game that never ends is a draw, and so is
+stalemate. The fifty-move and threefold-repetition rules are dropped: both exist only to force finite games,
+and infinite play is already a draw. A \emph{board position} assigns to each square a piece or nothing; a
+\emph{position} adds whose turn it is. Positions may have infinitely many pieces; a position is
+\emph{computable} if the board position is a Turing computable function of the square. A \emph{strategy}
+for a player from $p$ maps each finite sequence of moves from $p$ to a next move, and is \emph{winning} if it
+defeats every opposing strategy.
+\end{definition}
+
+\begin{definition}[Open game; \EHP{Section 2, p.\,3}]
+A two-player game of perfect information is \emph{open for a player} if every play won by that player is
+already won after finitely many moves; equivalently, that player's winning plays form an open set in the
+product topology on plays.
+\end{definition}
+
+\begin{remark}
+Chess is open for white and for black, since checkmate is a property of one position. A draw by infinite
+play is not decided at any finite stage, so the valuation below is one-sided: defined from white's point of
+view and, separately, from black's. Section~3 holds for any open game.
+\end{remark}
+
+\section{Ordinals}
+
+\begin{fact}[Standard; \EH{p.\,5}, \EHP{p.\,4}]\label{fact:ordinals}
+The ordinals extend the natural numbers:
+$0,1,2,\ldots,\omega,\omega+1,\ldots,\omega\cdot 2,\ldots,\omega^2,\ldots,\omega^3,\ldots,\omega^4,\ldots$
+Every ordinal $\alpha$ has a successor $\alpha+1$; a nonzero ordinal with no immediate predecessor, such as
+$\omega$ or $\omega^2$, is a \emph{limit}. Every ordinal below $\omega^\omega$ has a unique normal form
+$\omega^k\cdot a_k+\cdots+\omega\cdot a_1+a_0$ with natural coefficients, and two are compared at the first
+coefficient where they differ, from the left. The ordinals are \emph{well-ordered}: every nonempty set has a
+least element, so there is no infinite strictly decreasing sequence $\alpha_0>\alpha_1>\cdots$. A countable
+set of countable ordinals has a countable supremum.
+\stated
+\end{fact}
+
+\section{Game values}
+
+\begin{definition}[Game value; \EH{Definition 1, pp.\,4--5}, \EHP{Section 2, p.\,3}]\label{def:value}
+Fix white as the designated player. Values are assigned to positions by recursion on $\alpha$.
+\begin{enumerate}[label=(\roman*)]
+  \item A position in which white has already won has value $0$.
+  \item If $p$ has white to move, $p$ has value $\alpha+1$ if and only if $\alpha$ is least such that some
+    legal white move from $p$ reaches a position of value $\alpha$.
+  \item If $p$ has black to move and black has a legal move, $p$ has a value if and only if every legal black
+    move from $p$ reaches a position with a value, and then the value of $p$ is the supremum of those values.
+\end{enumerate}
+The valuation is the least assignment obeying (i) to (iii). A position with no value is \emph{unvalued}.
+\end{definition}
+
+\begin{remark}\label{rem:value}
+(a) At white's turn one good move suffices; at black's turn every move must be covered.
+(b) By (ii) a white-to-move position has a successor value. So a position of limit value $\lambda$ has black
+to move, and every black move drops strictly below $\lambda$.
+(c) Finite value $n$ means mate in $n$ for white with $n$ optimal \EH{p.\,5}.
+\end{remark}
+
+\begin{theorem}[The fundamental observation; \EH{p.\,5}, \EHP{pp.\,3--4}]\label{thm:fundamental}
+If a position has a value, white has a winning strategy from it. If a position has no value, black has a
+strategy that prevents white from ever winning.
+\end{theorem}
+
+\begin{proof}
+Suppose $p$ has a value. White plays the \emph{value-reducing strategy}: at each turn, move to a position of
+least value, which by (ii) is one less than the current value. By (iii) a black move never raises the value and
+never reaches an unvalued position. So if $v_k$ is the value at white's $k$th turn, white moves to $v_k-1$
+and black's reply has value at most $v_k-1$, whence $v_0>v_1>v_2>\cdots$. By Fact~\ref{fact:ordinals} the
+sequence is finite, so the play reaches value $0$, a win for white. (In a valued position black always has a
+legal move or white has already won, by (iii), so play never stalls.)
+
+Suppose $p$ is unvalued. If it is white's turn, no white move reaches a valued position, since by (ii) such a
+move would give $p$ a value. If it is black's turn and black has a legal move, some black move reaches an
+unvalued position, since otherwise (iii) would value $p$; if black has no legal move the position is
+stalemate. Black plays the \emph{value-maintaining strategy}, always choosing such a move. Every position of
+the play is unvalued, in particular never of value $0$, so white never wins.
+\end{proof}
+
+\begin{corollary}[\EHP{p.\,4}]
+In chess a position is a forced win for white exactly when it has a value for white, a forced win for black
+exactly when it has a value for black, and otherwise both players can force a draw. In an open game without
+draws, preventing white from winning is winning for black, so Theorem~\ref{thm:fundamental} is the
+Gale--Stewart theorem that open games are determined [GS53].
+\end{corollary}
+
+\begin{example}[Counting down from $\alpha$; \EH{p.\,6}]\label{ex:countdown}
+Black plays a strictly descending sequence of ordinals below $\alpha$, white says ``OK, fine'' after each,
+and white wins when black plays $0$. The position ``black to move at $\beta$'' has value exactly $\beta$: at
+$0$ white has won; at $\beta>0$ each black move to $\gamma<\beta$ leads to a white-to-move position whose only
+continuation is ``black to move at $\gamma$'', of value $\gamma+1$ by induction, and
+$\sup_{\gamma<\beta}(\gamma+1)=\beta$. The countdown game on our slides is our own variant: a counter shows
+an ordinal, white steps a successor down by one, black chooses any smaller ordinal at a limit. The same
+induction gives it value $\alpha$.
+\end{example}
+
+\begin{proposition}[Values as announcements; \EH{pp.\,5--7}, \EHP{pp.\,4--5}]\label{prop:announce}
+Play from value $\alpha$ is a countdown from $\alpha$: white lowers the value by exactly one at each of his
+moves, and black must choose a smaller ordinal at each limit. With black to move, a value of at least
+$\omega$ lets black \emph{announce} a number $n$, a lower bound on the length of the remaining play;
+$\omega\cdot n$, make $n$ announcements in turn; $\omega^2$, make a \emph{large announcement}, the number of
+announcements to follow; $\omega^2\cdot m$, make $m$ large announcements; $\omega^3$, make a \emph{huge
+announcement}, the number of large announcements to follow; $\omega^4$, make a \emph{meta-announcement}, the
+number of huge announcements. From $\omega^4$ black might play to
+$\omega^3\cdot 5+\omega^2\cdot 17+\omega\cdot 34+1234$: a meta-announcement of $6$, a huge announcement of
+$18$, a large announcement of $35$, and $1234$ moves before the next announcement \EHP{p.\,5}.
+\end{proposition}
+
+\section{Positions of value \texorpdfstring{$\omega$, $\omega^2$ and $\omega^3$}{omega, omega squared and omega cubed}}
+
+\begin{proposition}[\EH{Observation 2, p.\,7}]
+For each $n$ some position with four pieces (white king, queen and rook, black king) has value $n$: white
+rolls the black king along a rank with alternating checks. No three-piece position has value above $5$.
+\stated
+\end{proposition}
+
+\begin{proposition}[A finite position with value $\omega$; \EH{Figure 3, pp.\,8--9}]\label{prop:omega}
+The position of Figure~3, black to move, has value $\omega$.
+\end{proposition}
+
+\begin{sketch}
+Black lifts the e-rook to any height; white rolls the black king up the e-file with alternating rook and
+queen checks until it is mated against the rook: 1\ldots Re10 2.Rf5+ Ke6 3.Qd5+ Ke7 4.Rf7+ Ke8 5.Qd7+ Ke9
+6.Rf9\#. The higher the rook, the longer the roll, so after black's first move the values are finite and
+unbounded, with supremum $\omega$. Every other black first move is mated in at most three (1\ldots Rf6 2.Re4+ Kf5
+3.Qd5\#, 1\ldots Rd6 2.Qf5\#, and so on). White has nothing faster: skewering the lifted rook with 2.Re4+
+takes the white rook off the f-file and frees the black king from the net, after which black sacrifices his
+pieces and rook and queen cannot mate a bare king. The paper gives these lines and says ``we claim''; no
+exhaustive check is written out.
+\end{sketch}
+
+\begin{proposition}[Infinite positions with value $\omega$ and $\omega^2$; \EH{Figures 5--7, pp.\,12--15}]
+\label{prop:omega2}
+(a) In the door positions of Figure~5 an attacked black rook lifts to height $n$ and is captured, opening a
+hole in an infinite pawn column; white must advance the pawns below the hole $n$ times before the mating
+material is released. Value $\omega$.
+(b) In Figure~7 a pawn column divides the plane; the emphasised pawn below the keystone bishop is a
+portcullis, and once it moves the queens on the left flood the right half and mate. Black lifts the centre
+rook to height $n$ and white must advance the column $n$ times to free the bishop; after each advance black's
+free rook on the right checks the white king from a distance $k$ of black's choosing, and white, who cannot
+allow perpetual check, walks toward the rook for $k$ moves before black retreats. Black announces $n$, then
+$k$ in each of $n$ rounds: value $\omega^2$. For the upper bound the paper argues that each deviation mates
+sooner: capturing a wall pawn opens the hole early, and sacrificing the rook forfeits the harassment and
+leaves value $\omega$.
+\stated
+\end{proposition}
+
+\begin{proposition}[Value $\omega^2\cdot k$ and $\omega^3$; \EH{Figures 8--10, pp.\,15--20}]\label{prop:omega3}
+(a) A \emph{locked door with key} (Figure~8) is a rook tower whose rook need not move until a white
+\emph{key} pawn attacks the black \emph{lock} pawn guarding it; black lets the key capture the lock, the rook
+is attacked and lifts, and the pawn advances that follow release the next key pawn. Chaining $k$ towers
+(Figure~9, $k=4$) gives value $\omega^2\cdot k$: $k$ large announcements, each followed by the play of
+Proposition~\ref{prop:omega2}(b).
+(b) In Figure~10 the attacked bishop at m6 runs up the diagonal past as many towers as black chooses before
+it is captured; the capture releases the first key pawn, and the towers are consumed from right to left with
+a harassment campaign after every pawn advance. Past $k$ towers the value is at least $\omega^2\cdot k$ with
+$k$ unbounded, so the position has value $\omega^3$.
+\end{proposition}
+
+\begin{sketch}
+For the upper bound: without the bishop the position is drawn, so white must activate towers in order and
+black gains nothing by activating one himself; if black leaves the bishop, 2.Bl5 frees the k5 pawn and mates
+quickly; and irrelevant rook moves in towers beyond the active one cannot all be answered, since infinite play
+would draw, but white answers all except, say, every tenth, never one in an adjacent tower, and an ignored
+rook can be trapped on its third move (Figure~11), so black gains a bounded amount while giving up a
+harassment campaign worth $\omega$. The paper indicates $\omega^3\cdot 2$ by prefixing a second $\omega^3$
+block that releases the key bishop (p.\,20).
+\end{sketch}
+
+\section{The position with value \texorpdfstring{$\omega^4$}{omega to the fourth}}
+
+\begin{theorem}[\EHP{Theorem 1, p.\,3}]\label{thm:omega4}
+There is a position in infinite chess with game value $\omega^4$. The position is computable and involves
+infinitely many pieces.
+\end{theorem}
+
+The previous records were $\omega^3$ and $\omega^3\cdot 4$ \EHP{p.\,1}. The proof is the construction and
+analysis of 5.2 to 5.8, carried out in prose in the paper; we mark it a sketch throughout.
+
+\begin{construction}[The position; \EHP{Figure 1, pp.\,5--7}]\label{con:position}
+Black to move. Three components: the \emph{rook tower block} in the northeast, adapted from Figure~10 of
+[EH14]; the \emph{throne room} in the northwest, holding both kings; and the \emph{bishop-cannon battery}
+in the south, cannons in the southeast, gateway terminal wings in the southwest, an enclosed arena between.
+There are infinitely many towers, one cannon of each finite size and one wing of each finite size. In [EH14,
+Figure~10] the tower block alone had value $\omega^2$ and the harassment arena multiplied the delay by
+$\omega$, giving $\omega^3=\omega\cdot\omega^2$; here the battery multiplies by $\omega^2$, giving
+$\omega^4=\omega^2\cdot\omega^2$ \EHP{p.\,7}.
+\end{construction}
+
+\begin{lemma}[Tempo in the throne room; \EHP{Figure 2, pp.\,7--8}]\label{lem:tempo}
+No piece in the throne room can move. A white bishop reaching the marked diagonal mates at once
+(1.Bc10\#). A black bishop reaching its entry diagonal needs exactly three further moves
+(1\ldots Bc11 2\ldots Bg7 3\ldots Bj10 4\ldots Bh12\#). Hence if a black bishop reaches its diagonal and a
+white bishop reaches the white diagonal two moves later, white mates first.
+\end{lemma}
+
+\begin{sketch}
+Inspection of Figure~2. We have checked the two lines, not the absence of a faster black mate.
+\end{sketch}
+
+\begin{construction}[The rook towers; \EHP{Figure 3, pp.\,8--10}]\label{con:towers}
+The black bishop at f7 is attacked, and its capture or any exchange releases a white bishop that mates
+quickly, so black's first move sends it up the diagonal, say 1\ldots Bq18. White captures with a pawn and
+uses that pawn to pierce the upper pawn diagonal, releasing bishops that let the key pawn o21 advance against
+the guard pawn n24. Black does not capture, which would free the next tower sooner, so the key takes the
+guard and attacks the rook m25, which lifts to a height of black's choosing and is captured from the west.
+This opens a hole in the l-file pawn column, which white walks down one pawn move at a time until the bishop
+m24 can enter it; the bishops then clear the way for the key pawn l18 to attack the next guard pawn k21, and
+the process repeats one tower west. In the last tower the pawn c16 releases the mating bishop d15. Each
+tower costs white a number $h$ of moves fixed by the rook lift, during which black is free to play elsewhere.
+Sending the first bishop past $n$ towers gives a position of value in $[\omega^3\cdot n,\,\omega^3\cdot(n+1))$
+\EHP{p.\,9}.
+\end{construction}
+
+\begin{lemma}[Gateway wings; \EHP{Figure 4, pp.\,11--12}]\label{lem:wing}
+A wing of length $n$ is a diagonal hallway with $n$ gates, each a door pawn, one attack square on the hallway,
+and a white guard bishop in a tower behind it. A black bishop on the wing's entrance diagonal can make $n+1$
+forced-reply threats in succession: each attack square once, in any order, then the capture of a door
+(1\ldots Bp8 2.Bq12 Bj14 3.Bk18 Bd20 4.Be24 Bxf22 5.Bd23).
+\end{lemma}
+
+\begin{sketch}
+If white ignores an attack, black takes the door, exits, and reaches the throne-room diagonal three moves
+ahead of the guard, which mates by Lemma~\ref{lem:tempo}. If white steps the guard one square toward the
+gate, the guard can follow an exiting bishop along a parallel path two moves behind, and by
+Lemma~\ref{lem:tempo} white mates first, so black does not exit. Each reply is one guard step and touches
+nothing else.
+\end{sketch}
+
+\begin{lemma}[Bishop cannons; \EHP{Figure 5, pp.\,12--14}]\label{lem:cannon}
+A cannon of size $b$ is a stack of black bishops behind a wall, $b$ of them capped by a black pawn. Black
+\emph{opens} it by moving the front bishop along the exit diagonal to the entrance diagonal of an unused
+wing; this is not a threat, and white gets one free move. Every capped bishop then \emph{fires} with force:
+its departure uncovers a pawn advance against the wall, and white must advance the matching guard pawn to
+shore the wall up. Each fired bishop lands facing an unused wing of any size $g$ and spends $g+1$ forced
+replies there by Lemma~\ref{lem:wing}. So opening a cannon of size $b$ buys forced play of order
+$\omega\cdot b$, and the battery is reusable, since only finitely many cannons and wings are ever used.
+\end{lemma}
+
+\begin{sketch}
+After the h8 bishop fires: 2.j3 h8 3.j4 h7 4.j5 hxi6 5.jxi6, meeting the threat of i5 and i6 opening the
+chain for the bishop on g9; capturing the attacking pawn instead lets i7 advance and open a hole.
+\end{sketch}
+
+\begin{proposition}[The value along the main line; \EHP{pp.\,14--16}]\label{prop:formula}
+In the main line white works through the towers as in Construction~\ref{con:towers}, and at every free
+black move black opens a fresh cannon, as large as he likes, then plays out all its forced replies. White's
+only chances to progress in a tower are the free move after each opening, the first move, and the moment each
+rook is attacked. To a main-line position, outside the last four or five moves when the battery's threats are
+too slow to carry force, associate
+\[
+  \omega^3\cdot r+\omega^2\cdot h+\omega\cdot b+g,
+\]
+with $r$ the towers not yet activated, $h$ the white moves left in the current tower up to the attack on the
+next rook, $b$ the capped bishops left in the active cannon, and $g$ the forced-reply threats left to the
+current bishop in its wing. A gateway attack lowers $g$ by one. At $g=0$ a shot lowers $b$ by one and makes
+$g$ as large as black likes. At $b=0$ opening a cannon lets white lower $h$ by one and then makes $b$ as large
+as black likes. At $h=0$ the next tower activates, $r$ falls by one and the rook lift sets $h$. So the main
+line is a countdown from $\omega^4$ in the sense of Proposition~\ref{prop:announce}, and if neither side
+gains by deviating these ordinals are the game values.
+\end{proposition}
+
+\begin{sketch}
+The transitions are read off Construction~\ref{con:towers} and Lemmas~\ref{lem:wing} and
+\ref{lem:cannon}; the deviations are Proposition~\ref{prop:deviations}.
+\end{sketch}
+
+\begin{proposition}[Deviations; \EHP{pp.\,16--20}]\label{prop:deviations}
+Neither player gains by leaving the main line: white has no quicker mate, and black can neither win nor
+impose a larger value.
+\end{proposition}
+
+\begin{sketch}
+Black. Extra bishops freed into the arena are penned in by the black-square pawn wall and can only attack
+door pawns, each answered by a guard step. Bishops waiting in captured doorways are harmless: the first to
+exit lets the guard out, and black-square bishops cannot block the white-square mating path. Reordering the
+battery does not help: with $b$ the capped bishops in all open cannons and $g$ the longest run of forced
+replies available, any move that is not a forced reply hands white a reduction of $h$, worth more than
+anything it gains. Rook moves in towers beyond the active one are handled as in [EH14, Figure~11]: white
+ignores a fixed proportion, never the same rook twice nor an adjacent tower, and lowers $h$ faster than if
+black had fired the battery; a rook moved west of the active tower is captured so as to activate that tower.
+Exiting a gateway with the guard two behind loses by Lemma~\ref{lem:tempo}. 1\ldots Rxd15 is met by
+2.exd15 freeing the bishop f15; and the black pawn freed by white's first capture must stay put, since
+descending it opens the lower wall, which is why that wall is doubled here, unlike in [EH14].
+
+White. The only white bishops in the south are the guards, confined to four squares each; the bishops freed
+in the towers sit above the pawn diagonal with no way out, and opening further towers only frees more of them.
+Guarding before a threat is useless, since black has infinitely many unused cannons and wings. Breaking the
+cannon wall with a guard pawn lets a black bishop out to mate.
+\end{sketch}
+
+\begin{remark}[The compact battery; \EHP{Section 4, pp.\,20--21}]\label{rem:compact}
+The cannons can be placed with their back ends on a vertical eastern wall, still one of each size, and
+every fired bishop can still attack arbitrarily large wings. The value stays $\omega^4$ and the southeast
+quadrant is empty. The authors propose using it for $\omega^5$, with a further battery whose shots initiate
+the present cannons with force, but give no position.
+\end{remark}
+
+\section{Bounds, the conjecture and open problems}
+
+\begin{definition}[The omega one of chess; \EH{Definition 3, p.\,10}]\label{def:omegaone}
+$\omega_1^{\Ch}$ is the supremum of the values of the winning finite positions for white;
+$\bomega_1^{\Ch}$, the boldface version, the supremum over all winning positions, infinitely many pieces
+allowed;
+$\omega_1^{\Ch,c}$ the supremum over computable positions, and likewise for other complexity classes;
+$\omega_1^{\Ch_3}$ and $\bomega_1^{\Ch_3}$ the analogues for infinite three-dimensional chess.
+\end{definition}
+
+\begin{theorem}[\EH{Theorem 4, pp.\,10--12}]\label{thm:bounds}
+(1) $\omega_1^{\Ch}\le\omega_1^{\Ch,c}\le\omega_1^{\Ch,\mathrm{hyp}}\le\omega_1^{\CK}$, the Church--Kleene
+ordinal, the supremum of the computable ordinals; so the value of a winning finite, computable or
+hyperarithmetic position is a computable ordinal, and a player with a winning strategy from $p$ has one
+hyperarithmetic in $p$. (2) $\bomega_1^{\Ch}\le\omega_1$; the value of a winning position $p$ is a
+$p$-computable ordinal. (3) The same bounds hold in three dimensions.
+\stated
+\end{theorem}
+
+For (2): each player has only countably many legal moves from any position, so every supremum in
+Definition~\ref{def:value} is countable by Fact~\ref{fact:ordinals}, and $\omega_1$ is never reached. For
+(1) the paper shows that ``$p$ has value $\alpha$'' is $\Sigma_1$ over admissible sets and applies
+$\Sigma_1$-boundedness in $L_{\omega_1^{\CK}}$.
+
+\begin{conjecture}[\EH{Conjecture 5, p.\,21}]
+$\omega_1^{\Ch}=\omega_1^{\Ch,c}=\omega_1^{\Ch,\mathrm{hyp}}=\omega_1^{\CK}$ and $\bomega_1^{\Ch}=\omega_1$.
+The best finite lower bound known is $\omega$ (Proposition~\ref{prop:omega}); answers to Wästlund's
+MathOverflow question reach $\omega\cdot n$. The computable infinite positions give
+$\omega^3<\omega_1^{\Ch,c}$ [EH14] and $\omega^4<\omega_1^{\Ch,c}$ [EHP17].
+\end{conjecture}
+
+\begin{theorem}[\EH{Theorem 10, p.\,28; Corollary 12, p.\,35}]
+Every countable ordinal is the value of a position in infinite three-dimensional chess, so
+$\bomega_1^{\Ch_3}=\omega_1$; every computable ordinal is the value of a computable position, so
+$\omega_1^{\Ch_3,c}=\omega_1^{\CK}$.
+\stated
+\end{theorem}
+
+The idea: for a well-founded tree $T\subseteq\omega^{<\omega}$, the game in which black climbs through $T$
+and loses on reaching a leaf has value equal to the rank of $T$, since the two recursions coincide
+(Lemma~11); every countable ordinal is such a rank; and the paper embeds this game in three-dimensional chess
+with kings, pawns and bishops.
+
+\paragraph{Open problems.}
+(1) Is there a finite position with value $\omega^2$? None is known; [EH14, p.\,21] suggests an inefficient
+mating net that black can push far away. (2) Is $\omega^4$ the largest value in two dimensions? The
+$\omega^5$ idea of Remark~\ref{rem:compact} has no position behind it. (3) Is $\bomega_1^{\Ch}=\omega_1$
+in two dimensions? The authors tried to embed trees as in Theorem~6.4 and found the plane too cramped
+(p.\,21).
+
+\paragraph{Supplementary material.}
+For the presentation we wrote a browser game that implements the compact position of
+Remark~\ref{rem:compact} and white's main-line strategy and displays the ordinal of
+Proposition~\ref{prop:formula} as the game proceeds. It runs at \href{https://infinite-chess.dwainosaur.com}{infinite-chess.dwainosaur.com}, with source at
+\href{https://github.com/sean-reid/infinite-chess}{github.com/sean-reid/infinite-chess}. It is our own unpublished work, used only
+to illustrate the countdown; nothing in these notes depends on it.
+
+\section*{Glossary}
+
+\begin{multicols}{2}\footnotesize
+\begin{description}[style=unboxed,leftmargin=0pt]
+  \item[Announcement] Black's move at a limit stage, choosing a smaller ordinal; large, huge and meta
+    announcements are the choices at $\omega^2$, $\omega^3$ and $\omega^4$.
+  \item[Forced reply] A black move white must answer at once or be mated.
+  \item[Door, portcullis] A pawn whose advance releases white's mating material.
+  \item[Key pawn, lock pawn] The white pawn whose advance activates a tower, and the black pawn guarding it.
+  \item[Rook tower] One unit of white's main attack: guard pawn, rook, pawn column, bishops.
+  \item[Throne room] The locked chamber holding both kings in the $\omega^4$ position.
+  \item[Gateway terminal wing] A diagonal hallway with gates, each a door pawn, an attack square and a guard.
+  \item[Bishop cannon] A stack of pawn-capped bishops; opening it is free, each shot is a forced reply.
+  \item[$r$, $h$, $b$, $g$] Towers left, white moves left in the current tower, shots left in the active
+    cannon, forced replies left in the active wing.
+  \item[Church--Kleene ordinal $\omega_1^{\CK}$] The least non-computable ordinal, the supremum of the
+    computable ones.
+\end{description}
+\end{multicols}
+
+\section*{References}
+
+\begin{description}[style=unboxed,leftmargin=0pt]\footnotesize
+  \item[{[EH14]}] C.~D.~A.~Evans and J.~D.~Hamkins, Transfinite game values in infinite chess,
+    \emph{Integers} 14 (2014), \#G2. \href{https://doi.org/10.5281/zenodo.10454032}{doi:10.5281/zenodo.10454032}.
+  \item[{[EHP17]}] C.~D.~A.~Evans, J.~D.~Hamkins and N.~L.~Perlmutter, A position in infinite chess with game
+    value $\omega^4$, \emph{Integers} 17 (2017), \#G4. \href{https://doi.org/10.5281/zenodo.10657427}{doi:10.5281/zenodo.10657427}.
+  \item[{[GS53]}] D.~Gale and F.~M.~Stewart, Infinite games with perfect information, Annals of Mathematics
+    Studies 28 (1953), 245--266.
+\end{description}
+
+\end{document}
