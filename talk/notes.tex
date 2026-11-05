@@ -44,8 +44,9 @@
 
 The definitions, results and constructions behind our presentation, arranged by topic rather than in the
 order of the slides. [EH14] and [EHP17] are the two papers in the references; page numbers refer to the
-published PDFs. Every result ends with a \emph{proof}, which is complete; a \emph{sketch}, which gives the
-structure of the argument and says what is left out; or the words \emph{stated without proof}. The numbering
+published PDFs. Every theorem, proposition and lemma ends with a \emph{proof}, which is complete; a \emph{sketch},
+which gives the structure of the argument and says what is left out; or the words \emph{stated without
+proof}. The numbering
 is ours; the papers' labels follow each heading.
 
 \section{Infinite chess and open games}
@@ -103,7 +104,7 @@ The valuation is the least assignment obeying (i) to (iii). A position with no v
 
 \begin{remark}\label{rem:value}
 (a) At white's turn one good move suffices; at black's turn every move must be covered.
-(b) By (ii) a white-to-move position has a successor value. So a position of limit value $\lambda$ has black
+(b) By (ii) a white-to-move position that is not already won has a successor value. So a position of limit value $\lambda$ has black
 to move, and every black move drops strictly below $\lambda$.
 (c) Finite value $n$ means mate in $n$ for white with $n$ optimal \EH{p.\,5}.
 \end{remark}
@@ -145,7 +146,7 @@ an ordinal, white steps a successor down by one, black chooses any smaller ordin
 induction gives it value $\alpha$.
 \end{example}
 
-\begin{remark}[Values as announcements; \EH{pp.\,5--7}, \EHP{pp.\,4--5}]\label{prop:announce}
+\begin{remark}[Values as announcements; \EH{pp.\,5--7}, \EHP{pp.\,4--5}]\label{rem:announce}
 Play from value $\alpha$ is a countdown from $\alpha$: white lowers the value by exactly one at each of his
 moves, and black must choose a smaller ordinal at each limit. With black to move, a value of at least
 $\omega$ lets black \emph{announce} a number $n$, a lower bound on the length of the remaining play;
@@ -214,8 +215,8 @@ black gains nothing by activating one himself; if black leaves the bishop, 2.Bl5
 quickly; and irrelevant rook moves in towers beyond the active one cannot all be answered, since infinite play
 would draw, but white answers all except, say, every tenth, never one in an adjacent tower, and an ignored
 rook can be trapped on its third move (Figure~11), so black gains a bounded amount while giving up a
-harassment campaign worth $\omega$. The paper indicates $\omega^3\cdot 2$ by prefixing a second $\omega^3$
-block that releases the key bishop (p.\,20).
+harassment campaign worth $\omega$. The paper indicates $\omega^3\cdot 2$ and more by prefixing further $\omega^3$
+blocks that release the key bishop (p.\,20); \EHP{p.\,2} cites this as $\omega^3\cdot 4$.
 \end{sketch}
 
 \section{The position with value \texorpdfstring{$\omega^4$}{omega to the fourth}}
@@ -226,8 +227,9 @@ infinitely many pieces.
 \end{theorem}
 
 \begin{sketch}
-The previous records were $\omega^3$ and $\omega^3\cdot 4$ \EHP{p.\,1}. The proof is the construction of 5.2 to
-5.6 and the analysis of 5.7 and 5.8, carried out in prose in the paper.
+The previous records were $\omega^3$ and $\omega^3\cdot 4$ \EHP{p.\,1}. The proof is the construction in
+Constructions and Lemmas~\ref{con:position} to \ref{lem:cannon} and the analysis in
+Propositions~\ref{prop:formula} and \ref{prop:deviations}, carried out in prose in the paper.
 \end{sketch}
 
 \begin{construction}[The position; \EHP{Figure 1, pp.\,5--7}]\label{con:position}
@@ -310,7 +312,7 @@ current bishop in its wing. A gateway attack lowers $g$ by one. When $g$ reaches
 and makes $g$ as large as black likes. When $b$ reaches $0$ black opens a new cannon, which lets white lower
 $h$ by one and then makes $b$ as large as black likes. When $h$ reaches $0$ the next tower activates, $r$
 falls by one and the rook lift sets $h$. So the main
-line is a countdown from $\omega^4$ in the sense of Proposition~\ref{prop:announce}, and if neither side
+line is a countdown from $\omega^4$ in the sense of Remark~\ref{rem:announce}, and if neither side
 gains by deviating these ordinals are the game values.
 \end{proposition}
 
