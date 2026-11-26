@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.6.0...infinite-chess-v0.7.0) (2026-11-26)
+
+
+### Features
+
+* serve the site from infinite-chess.seanre.id ([#68](https://github.com/sean-reid/infinite-chess/issues/68)) ([092d675](https://github.com/sean-reid/infinite-chess/commit/092d6753414529465d9a2d81dbc88d415c7f8ad6))
+
 ## [0.6.0](https://github.com/sean-reid/infinite-chess/compare/infinite-chess-v0.5.0...infinite-chess-v0.6.0) (2026-11-05)
 
 
