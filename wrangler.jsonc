@@ -12,5 +12,5 @@
   "observability": { "enabled": true },
   "workers_dev": true,
   "preview_urls": true,
-  "routes": [{ "pattern": "infinite-chess.dwainosaur.com", "custom_domain": true }],
+  "routes": [{ "pattern": "infinite-chess.seanre.id", "custom_domain": true }],
 }

@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const base = process.argv[2] ?? "https://infinite-chess.dwainosaur.com";
+const base = process.argv[2] ?? "https://infinite-chess.seanre.id";
 const out = join(here, "..", "figures", "demo");
 const link = readFileSync(join(here, "rook-attacked.url"), "utf8").trim();
 mkdirSync(out, { recursive: true });
